@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <title>Invoice</title>
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+  <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background: #f4f4f9;
+        }
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .invhead {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .invhead h2 {
+            align-self: center;
+        }
+        h4 {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #333;
+            color: #fff;
+        }
+        tfoot td {
+            font-weight: bold;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .print-btn {
+            background: darkred;
+            color: white;
+        }
+        .back-btn {
+            background: #008CBA;
+            color: white;
+        }
+        .pay-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+
+        #customer-name {
+            width: 250px;
+        }
+
+        /* Responsive Media Queries */
+
+/* For tablets (iPads, 768px to 1024px) */
+@media (max-width: 1024px) {
+    .invoice-container {
+        padding: 15px;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    table {
+        font-size: 14px;
+    }
+}
+
+/* For phones (up to 768px) */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+        padding: 10px;
+    }
+    .invoice-container {
+        width: 100%;
+        padding: 10px;
+    }
+    .invhead {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    h2 {
+        font-size: 1.4em;
+    }
+    table {
+        font-size: 12px;
+    }
+    button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="invoice-container">
+        <div class="invhead">
+            <h4>LOGO</h4>
+            <h2>Invoice</h2>
+            <p><strong>Invoice No:</strong>{{ invoice_id }}</p>
+
+        </div>
+        <p><strong>Date:</strong> <span id="invoice-date"></span></p>
+        <p>
+            <strong>Customer Name:</strong>
+            <input type="text" id="customer-name" placeholder="Enter customer name" value="{{ user.business_name }}">
+        </p>
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price (₦)</th>
+                    <th>Total (₦)</th>
+                </tr>
+            </thead>
+            <tbody id="invoice-items">
+                <!-- Items will be dynamically added here -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Goods Total:</strong></td>
+                    <td id="goods-total">₦0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><strong>App Maintenance Fee (1.5%)</strong></td>
+                    <td id="maintenance-fee">$0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><strong>Grand Total (₦):</strong></td>
+                    <td id="grand-total">₦0.00</td>
+                </tr>
+            </tfoot>
+            
+        </table>
+        
+    
+        <div class="buttons">
+            <button class="print-btn" onclick="printInvoice()">Print Invoice</button>
+            <button class="download-btn" onclick="downloadInvoiceAsPDF()">Download Invoice as PDF</button>
+            <button class="back-btn" onclick="window.location.href='{% url 'dashboard' %}'">Back to Dashboard</button>
+            <button class="pay-btn" onclick="window.location.href='{% url 'payment_page' %}'">Make Payment</button>
+        </div>
+        
+    </div>
+    
+    <script>
+        const EXCHANGE_RATE = 1600; 
+        const MAINTENANCE_PERCENT = 0.005;
+    
+        function loadInvoice() {
+            const invoiceData = sessionStorage.getItem("uiCartItems");
+            const cartItems = invoiceData ? JSON.parse(invoiceData) : [];
+    
+            const invoiceItemsContainer = document.getElementById("invoice-items");
+            const grandTotalElement = document.getElementById("grand-total");
+            const dateElement = document.getElementById("invoice-date");
+            const feeElement = document.getElementById("maintenance-fee");
+            const goodsTotalElement = document.getElementById("goods-total");
+    
+            if (!invoiceItemsContainer || !grandTotalElement || !dateElement || !feeElement || !goodsTotalElement) {
+                console.error("Some invoice elements are missing in the HTML.");
+                return;
+            }
+    
+            dateElement.textContent = new Date().toLocaleDateString();
+    
+            invoiceItemsContainer.innerHTML = "";
+            let goodsTotal = 0;
+    
+            cartItems.forEach(item => {
+                const price = parseFloat(item.price) || 0;
+                const quantity = parseInt(item.quantity) || 0;
+                const itemTotal = price * quantity;
+                goodsTotal += itemTotal;
+    
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>₦${price.toLocaleString()}</td>
+                    <td>₦${itemTotal.toLocaleString()}</td>
+                `;
+                invoiceItemsContainer.appendChild(row);
+            });
+    
+            // Calculate maintenance fee
+            const maintenanceFeeNaira = goodsTotal * MAINTENANCE_PERCENT;
+            const maintenanceFeeUSD = maintenanceFeeNaira / EXCHANGE_RATE;
+            const finalTotal = goodsTotal + maintenanceFeeNaira;
+    
+            // Set values in the invoice
+            goodsTotalElement.textContent = `₦${goodsTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+            feeElement.textContent = `$${maintenanceFeeUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+            grandTotalElement.textContent = `₦${finalTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        }
+
+    
+    
+        // Print invoice (requires customer name)
+        function printInvoice() {
+            const customerName = document.getElementById("customer-name").value;
+            if (!customerName) {
+                alert("Please enter customer name before printing!");
+                return;
+            }
+            window.print();
+        }
+    
+        // Download invoice as an HTML file
+        function downloadInvoiceAsPDF() {
+            // Select the invoice container (make sure it has the class "invoice-container")
+            const invoiceContainer = document.querySelector(".invoice-container");
+            if (!invoiceContainer) {
+                console.error("Invoice container not found!");
+                return;
+            }
+          
+            // Use html2canvas to capture the invoice container as an image
+            html2canvas(invoiceContainer).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                // Use jsPDF (for UMD version, access via window.jspdf.jsPDF)
+                const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                // Calculate the PDF image height based on the canvas dimensions
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pageWidth;
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save("invoice.pdf");
+            }).catch(error => {
+                console.error("Error generating PDF:", error);
+            });
+        }
+        // Load invoice when the page loads
+        window.onload = loadInvoice;
+    </script>
+      
+</body>
+</html>

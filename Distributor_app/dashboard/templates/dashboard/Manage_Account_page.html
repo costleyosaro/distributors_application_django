@@ -1,0 +1,543 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <title>Ghadco_ph_register</title>
+
+<style>
+  /* General styling */
+  
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+
+  header, main, footer {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #f3f1f1;
+    margin: 10px 0;
+  }
+
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+
+  .toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    border-bottom: rgb(2, 3, 88) 2px solid;
+  }
+
+  .toprow img {
+    height: 4em;
+    width: 10em;
+  }
+
+  /* The Nav section*/
+
+  nav {
+    margin: 1em;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2em;
+    margin: 0;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: rgb(2, 3, 88);
+    text-transform: uppercase;
+    font-size: .8rem;
+    border-radius: 1em;
+    padding: 1em;
+  }
+
+  nav ul li a:hover {
+    background-color: rgb(152, 153, 243);
+  }
+
+  /* Sidebar section */
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 200px;
+    z-index: 999;
+    background-color: white;
+    backdrop-filter: blur(10px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .MenuButton {
+    display: none;
+  }
+
+  .sidebar li {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .sidebar a {
+    width: 100%;
+  }
+
+  /* footer */
+
+  footer {
+    background-color: rgb(2, 3, 88);
+    color: white;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+  }
+
+  .register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(2, 3, 88);
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    padding: 30px 15px;
+    margin: 20px auto;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .register h3 {
+    margin-top: 0;
+  }
+
+  .ph {
+    color: gold;
+  }
+
+  .input-group {
+    position: relative;
+    margin: 15px 0;
+  }
+
+  .input-field {
+    height: 40px;
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 0 40px 0 15px;
+    border-radius: 10px;
+    outline: none;
+    width: 100%;
+  }
+
+  .input-field:focus {
+    border: 2px solid gold;
+  }
+
+  .input-group label {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    transition: 0.3s;
+    color: white;
+  }
+
+  .input-field:focus ~ label, 
+  .input-field:not(:placeholder-shown) ~ label {
+    top: -10px;
+    font-size: 12px;
+    color: gold;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  #inputSubmit {
+    background: transparent;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid white;
+    margin-top: 20px;
+    transition: 0.4s ease-out;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  #inputSubmit:hover {
+    background: gold;
+    color: rgb(2, 3, 88);
+  }
+
+  .tc {
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .ts {
+    color: gold;
+    cursor: pointer;
+  }
+    
+  .instruct {
+    width: 470px;
+    padding: 5px;
+    font-size: 12px;
+    color: gold;
+  }
+
+  .input-group img {
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    top: 20px;
+    left: 450px;
+    cursor: pointer;
+  }
+
+  .agree {
+    position: relative;
+    left: 10px;
+    top: 0px;
+    color: darkred;
+    font-weight: bold;
+    margin-left: 5px;
+    }
+
+    #agree {
+      cursor: pointer;
+    }
+
+  .declaration {
+    font-size: 20px;
+    color: rgb(2, 3, 88);
+    border: 1px solid rgb(2, 3, 88);
+    padding: 10px;
+    border-radius: 10px;
+    }
+
+  .declaration h3 {
+      text-decoration: underline;
+      color: darkred;
+    }
+
+
+    @media (max-width: 768px) {
+      .hideOnMobile {
+        display: none;
+      }
+      .input-group {
+        width: 75%;
+      }
+      .input-group label {
+        font-size: 80%;
+      }
+      .input-group img {
+        position: absolute;
+        left: 110%;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .instruct {
+        width: 280px;
+        font-size: 16px;
+      }
+      .wrap {
+        width: 100%;
+      }
+      .declaration {
+        font-size: 16px;
+        width: 85%;
+        position: relative;
+        left: 5%;
+      }
+      footer {
+        width: 92%;
+        font-size: 16px;
+      }
+      .register {
+        width: 90%;
+        position: relative;
+        left: 0%;
+      }
+      .sidebar a {
+        font-size: 20px;
+      }
+      .tc p {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hideOnMobile {
+        display: none;
+      }
+      .input-group {
+        width: 90%;
+      }
+      .input-group label {
+        font-size: 100%;
+      }
+      .input-group img {
+        position: absolute;
+        left: 100%;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .instruct {
+        width: 500px;
+        font-size: 22px;
+      }
+      .wrap {
+        width: 100%;
+      }
+      .declaration {
+        font-size: 22px;
+        width: 90%;
+        position: relative;
+        left: 5%;
+      }
+      footer {
+        width: 96%;
+        font-size: 22px;
+      }
+      .register {
+        width: 90%;
+        position: relative;
+        left: 0%;
+      }
+      .sidebar a {
+        font-size: 22px;
+      }
+      .tc p {
+        font-size: 18px;
+      }
+      nav ul {
+        font-family: 'Permanent Marker', cursive;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hideOnMobile {
+        display: none;
+      }
+      .input-group {
+        width: 70%;
+      }
+      .input-group label {
+        font-size: 90%;
+      }
+      .input-group img {
+        position: absolute;
+        left: 110%;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .instruct {
+        width: 300px;
+        font-size: 22px;
+      }
+      .wrap {
+        width: 100%;
+      }
+      .declaration {
+        font-size: 22px;
+        width: 90%;
+        position: relative;
+        left: 5%;
+      }
+      footer {
+        width: 93%;
+        font-size: 22px;
+      }
+      .register {
+        width: 90%;
+        position: relative;
+        left: 0%;
+      }
+      .sidebar a {
+        font-size: 22px;
+      }
+      .tc p {
+        font-size: 18px;
+      }
+      nav ul {
+        font-family: 'Permanent Marker', cursive;
+      }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="toprow">
+        <a href="{% url 'home'%}"><img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Logo"></a>
+        <nav>
+          <ul class="sidebar">
+            <li onclick=HideSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'register' %}">Sign Up</a></li>
+            <li><a href="{% url 'login_view' %}">Sign In</a></li>
+            <li><a href="{% url 'help' %}">Help</a></li>
+          </ul>
+          <ul>
+            <li class="hideOnMobile"><a href="{% url 'home' %}">Home</a></li>
+            <li class="hideOnMobile"><a href="{% url 'about' %}">About Us</a></li>
+            <li class="hideOnMobile"><a href="{% url 'register' %}">Sign Up</a></li>
+            <li class="hideOnMobile"><a href="{% url 'login_view' %}">Sign In</a></li>
+            <li class="hideOnMobile"><a href="{% url 'help' %}">Help</a></li>
+            <li class="MenuButton" onclick=ShowSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+          </ul>
+        </nav>
+    </div>
+    
+
+    <div class="container">
+      <main>
+        <div class="register">
+          <h1>Chiamo Multitrade Nigeria</h1>
+          <h3>MANAGE ACCOUNT <span class="ph">PHC</span></h3>
+          <form id="manageAccountForm" method="POST" action="{% url 'manage_account' %}">
+            {% csrf_token %}
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="name" id="name" placeholder=" " required>
+              <label for="name">Full Name</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="username" id="username" placeholder=" " required>
+              <label for="username">Username</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="business_name" id="business-name" placeholder=" " required>
+              <label for="business-name">Business Name</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="directors_name" id="directors-name" placeholder=" " required>
+              <label for="directors-name">Director's Name</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="rc_number" id="rc-number" placeholder=" " required>
+              <label for="rc-number">RC Number</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="tin" id="tin-number" placeholder=" " required>
+              <label for="tin-number">TIN Number</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" name="date_of_incorporation" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'" class="input-field" id="date-of-inc" placeholder=" " required>
+              <label for="date-of-inc">Date of Incorporation:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="tel" class="input-field" name="phone_number" id="phone-number" placeholder=" " required>
+              <label for="phone-number">Phone Number:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="NIN" id="nin" placeholder=" " required>
+              <label for="nin">NIN:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="email" class="input-field" name="email" id="email-address" placeholder=" " required>
+              <label for="email-address">Email Address:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="business_address" id="business-address" placeholder=" " required>
+              <label for="business-address">Business Address:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="state" id="state" placeholder=" " required>
+              <label for="state">State:</label>
+            </div>
+    
+            <div class="input-group">
+              <input type="text" class="input-field" name="city_lga" id="city-lga" placeholder=" " required>
+              <label for="city-lga">City/LGA:</label>
+            </div>
+    
+            <div class="input-group">
+              <button id="inputSubmit" type="submit">SUBMIT</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+    
+    
+
+    <footer>
+        <p>&copy; 2024 Ghadco PH</p>
+        <p id="footnote">
+            We are advocates of long-term relationships with our suppliers and customers.
+            Building strong relations with our clients is paramount as we fulfill their product needs to the best of our ability.
+        </p>
+    </footer>
+
+    <script type="text/javascript">
+        function ShowSidebar() {
+          const sidebar = document.querySelector('.sidebar')
+          sidebar.style.display = 'flex';
+        }
+
+        function HideSidebar () {
+          const sidebar = document.querySelector('.sidebar')
+          sidebar.style.display = 'none';
+        }
+        <script src="{% static 'js/update_users_details.js' %}"></script>
+
+            // fetch operstion
+      
+    </script>
+
+  </div>
+
+</body>
+</html>

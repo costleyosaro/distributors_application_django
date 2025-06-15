@@ -1,0 +1,136 @@
+{% load static %}
+<!-- Account Details Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <title>Payment Account Details</title>
+    <style>
+        /* Account Details Page Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background: #f4f4f9;
+        }
+        .account-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .account-header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .account-header h2 {
+            font-size: 1.8em;
+            color: #333;
+        }
+        .account-details {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+        .account-details p {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .account-details span {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+        }
+        .payment-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .payment-btn:hover {
+            background: #45a049;
+        }
+
+        .inv-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: darkred;
+            color: white;
+            text-align: center;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .inv-btn:hover {
+            background: rgb(54, 3, 3);
+        }
+
+        a {
+            text-decoration: none;
+        }
+        /* Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .account-container {
+                padding: 15px;
+            }
+            .account-details {
+                font-size: 1.1em;
+            }
+            .payment-btn {
+                width: 180px;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                margin: 10px;
+                padding: 10px;
+            }
+            .account-container {
+                width: 100%;
+                padding: 10px;
+            }
+            .account-header h2 {
+                font-size: 1.6em;
+            }
+            .account-details {
+                font-size: 1em;
+            }
+            .payment-btn {
+                width: 160px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="account-container">
+        <div class="account-header">
+            <h2>Account Details for Payment</h2>
+        </div>
+        <div class="account-details">
+            <p><span>Bank Name:</span> OPAY </p>
+            <p><span>Account Number:</span> 7018329357 </p>
+            <p><span>Account Name:</span> COSTLEY OSARO </p>
+        </div>
+        <a href="{% url 'home' %}" class="payment-btn">Back to Home</a>
+        <a href="{% url 'generate_invoice' %}" class="inv-btn">Back to Invoice</a>
+    </div>
+</body>
+</html>

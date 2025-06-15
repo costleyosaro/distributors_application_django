@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <title>Ghadco PH</title>
+    <style>
+    /* General styling */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+    /* Example content */
+      header, main, footer {
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #f3f1f1;
+        margin: 10px 0;
+      }
+
+    /* Responsive image */
+      img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .toprow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      border-bottom: rgb(2, 3, 88) 2px solid;
+    }
+
+    .toprow img {
+      height: 4em;
+      width: 10em;
+    }
+
+    footer {
+      background-color: rgb(2, 3, 88);
+      color: white;
+      font-size: 16px;
+      height: 100px;
+    }
+
+    header {
+      color: rgb(109, 4, 4);
+      opacity: 0.4;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      font-size: larger;
+      background-image: url('{% static 'images/Mamuda-Group-Snacks.png'%}');
+      background-size: contain;
+    }
+
+    hr {
+      height: 2px;
+      background-color: rgb(109, 4, 4);
+    }
+
+    nav {
+      margin: 1em;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 4em;
+      margin: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-weight: bold;
+      color: rgb(2, 3, 88);
+      text-transform: uppercase;
+      font-size: .8rem;
+      border-radius: 1em;
+      padding: 1em;
+    }
+
+    nav ul li a:hover {
+      background-color: rgb(152, 153, 243);
+    }
+
+   /* Sidebar section */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 200px;
+    z-index: 999;
+    background-color: white;
+    backdrop-filter: blur(10px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .MenuButton {
+    display: none;
+  }
+  .sidebar li {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .sidebar a {
+    width: 100%;
+  }
+  .picslide {
+    position: relative;
+    left: 25%;
+    width: 50%;
+    height: 200px;
+    background-image: url(Care-Carton-1.JPG);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: 5s;
+
+    animation-name: animate;
+    animation-direction: alternate-reverse;
+    animation-duration: 5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+    animation-timing-function: ease-in-out;
+  }
+
+  @keyframes animate {
+    0% {
+      background-image: url("{% static 'images/Care-Carton-2.JPG' %}");
+    }
+    20% {
+      background-image: url("{% static 'images/Care-Detergent-3.JPG'%}");
+    }
+    40% {
+      background-image: url('{% static 'images/slideimg2.jpg'%}');
+    }
+    60% {
+      background-image: url('{% static 'images/Bisuit-9.png' %}');
+    }
+    80% {
+      background-image: url('{% static 'images/slideimg4.png'%}');
+    }
+    100% {
+      background-image: url('{% static 'images/Sweet-2.JPG'%}');
+    }
+  }
+
+  @media (max-width: 768px) {
+  .hideOnMobile {
+    display: none;
+  }
+  .MenuButton {
+    display: block;
+  }
+  body {
+    width: auto;
+    height: auto;
+  }
+  .wrap {
+    width: 100%;
+    height: 100%;
+  }
+  footer {
+    width: auto;
+    font-size: 20px;
+    margin-top: 0;
+    height: auto;
+  }
+  .sidebar a {
+    font-size: 20px;
+  }
+  .toprow {
+    width: 100%;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 3em;
+    margin: 0;
+    font-family: 'Permanent Marker', cursive;
+  }
+  .picslide {
+    width: 90%;
+    position: relative;
+    left: 20px;
+  }
+}
+    
+  @media (max-width: 480px) {
+    .hideOnMobile {
+      display: none;
+    }
+    .MenuButton {
+      display: block;
+    }
+    body {
+      width: auto;
+      height: auto;
+    }
+    .wrap {
+      width: 100%;
+      height: 100%;
+    }
+    footer {
+      width: auto;
+      font-size: 14px;
+      margin-top: 0;
+      height: auto;
+    }
+    .sidebar a {
+      font-size: 18px;
+    }
+    .toprow {
+      width: 100%;
+    }
+    main {
+      width: auto;
+      font-size: 16px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 1em;
+      margin: 0;
+      font-family: 'Permanent Marker', cursive;
+    }
+    .picslide {
+      width: 90%;
+      height: 200px;
+      position: relative;
+      left: 20px;
+    }
+  }
+        
+    </style>
+</head>
+<body>
+
+  <div class="wrap">
+
+  <div class="toprow">
+    <a href="{% url 'home' %}"><img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Logo"></a>
+    <nav>
+          <ul class="sidebar">
+            <li onclick=HideSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'register' %}">Sign Up</a></li>
+            <li><a href="{% url 'login_view' %}">Sign In</a></li>
+            <li><a href="{% url 'help' %}">Help</a></li>
+        </ul>
+        <ul>
+            <li class="hideOnMobile"><a href="{% url 'home' %}">Home</a></li>
+            <li class="hideOnMobile"><a href="{% url 'about' %}">About Us</a></li>
+            <li class="hideOnMobile"><a href="{% url 'register' %}">Sign Up</a></li>
+            <li class="hideOnMobile"><a href="{% url 'login_view' %}">Sign In</a></li>
+            <li class="hideOnMobile"><a href="{% url 'help' %}">Help</a></li>
+            <li class="MenuButton" onclick=ShowSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+        </ul>
+    </nav>
+</div>
+
+    <div class="container">
+        <header>
+            <h1>Ghadco Port Harcourt</h1>
+        </header>
+        <main>
+          <hr>
+
+          <h2>Work Force</h2>
+
+          <hr>
+
+           <p>
+            With our dedicated employees, Ghadco is making great strides towards achieving its mission of providing exemplary service.
+            Our staff tackle tasks with both skill and enthusiasm so that our clients and customers are given every consideration and
+            ample support. We utilize over 250 vehicles from trucks to vans, canters and hijets to transport goods all over Nigeria
+            covering all states. Our transport staff are trustworthy and experienced. For each of our regions, there are talented sales
+            and marketing staff making support easily accessible to our customers.
+           </p>
+
+           <div class="picslide">
+            
+           </div>
+
+           <p>
+                Our sales and warehouse managers bring a wealth of experience and talent that is invaluable. Our employees’ loyalty and commitment to their work has steered the company through turbulent times. Ghadco has not only risen in the face of recent challenges in the Nigerian market but has maintained its vision of a flourishing wholesale business that distributes quality.
+                Our staff is composed of knowledgeable professionals with ample experience in the sales, marketing and distribution business.
+           </p>
+
+           <hr>
+
+           <h2>Company Values</h2>
+
+           <hr>
+
+           <p>
+              Honesty & Ethics, We uphold the highest of all standards, treating our commercial partners honestly and taking our commitment seriously, as we believe trust is the safest step towards success.
+              Leadership: From market presence, to building brands, we strive to continuously set the standards for excellence in everything we do.
+              Passion: We strongly believe in our values, as our pride and dedication drive us into reaching OUR PARTNERS
+          </p>
+
+        </main>
+        <footer>
+            <p>&copy; 2024 Ghadco PH</p>
+            <p>
+              We are advocates of long-term relationships with our suppliers and customers.
+              We pride ourselves on supplier relations that date back from 1991 and hope to continue to bridge new associations and links.
+              In addition, building strong relations with our clients is paramount to us as we try and fulfill their product needs to the best of our ability.
+            </p>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+
+      function ShowSidebar() {
+        const sidebar = document.querySelector('.sidebar')
+        sidebar.style.display = 'flex';
+      }
+  
+      function HideSidebar () {
+        const sidebar = document.querySelector('.sidebar')
+        sidebar.style.display = 'none';
+      }
+        
+  </script>
+  </div>
+</body>
+</html>

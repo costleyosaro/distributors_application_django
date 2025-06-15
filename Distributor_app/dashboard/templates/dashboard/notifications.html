@@ -1,0 +1,456 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <title>Notifications</title>
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      margin-top: 100px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .notification {
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background-color: #e6f0ff;
+      position: relative;
+      transition: background-color 0.3s ease;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .notification.read {
+      background-color: #f0f0f0;
+      color: #888;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    #markAll {
+      display: block;
+      margin: 20px auto 0;
+      padding: 10px 20px;
+      background:rgb(4, 47, 94);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    #markAll:hover {
+      background:rgb(235, 241, 247);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .toprow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+      border-bottom: rgb(2, 3, 88) 2px solid;
+    }
+
+    .toprow img {
+      height: 4em;
+      width: 10em;
+    }
+
+    nav {
+      margin: 1em;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: flex-end;
+      gap: 2em;
+      margin: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-weight: bold;
+      color: rgb(2, 3, 88);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      border-radius: 1em;
+      padding: 1em;
+    }
+
+    nav ul li a:hover {
+      background-color: rgb(152, 153, 243);
+    }
+
+    .wrap {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 200px;
+      z-index: 999;
+      background-color: white;
+      backdrop-filter: blur(10px);
+      box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .MenuButton {
+      display: none;
+    }
+
+    .sidebar li {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .sidebar a {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .hideOnMobile {
+        display: none;
+      }
+
+      .MenuButton {
+        display: block;
+      }
+
+      body,
+      .wrap,
+      footer {
+        width: auto;
+        height: auto;
+      }
+
+      footer {
+        font-size: 20px;
+        margin-top: 0;
+      }
+
+      .sidebar a {
+        font-size: 20px;
+      }
+
+      .distributor {
+        width: 94%;
+        padding: 7px;
+      }
+
+      .distributor h1 {
+        font-size: 30px;
+      }
+
+      .toprow,
+      nav ul {
+        width: 100%;
+      }
+
+      nav ul {
+        gap: 3em;
+        font-family: 'Permanent Marker', cursive;
+      }
+
+      .picslide {
+        width: 90%;
+        left: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hideOnMobile {
+        display: none;
+      }
+
+      .MenuButton {
+        display: block;
+      }
+
+      body,
+      .wrap,
+      footer,
+      .video-container,
+      main {
+        width: auto;
+        height: auto;
+        font-size: 14px;
+      }
+
+      .sidebar a {
+        font-size: 18px;
+      }
+
+      .distributor h1 {
+        font-size: 30px;
+      }
+
+      nav ul {
+        gap: 1em;
+        font-family: 'Permanent Marker', cursive;
+      }
+
+      .picslide {
+        width: 90%;
+        height: 200px;
+        left: 20px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+
+      #markAll {
+        width: 100%;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  
+  <div class="toprow">
+    <a href="{% url 'home' %}">
+      <img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Logo">
+    </a>
+    <nav>
+      <ul class="sidebar">
+        <li onclick="HideSidebar()">
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+          </a>
+        </li>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'register' %}">Sign Up</a></li>
+        <li><a href="{% url 'login_view' %}">Sign In</a></li>
+        <li><a href="{% url 'help' %}">Help</a></li>
+      </ul>
+      <ul>
+        <li class="hideOnMobile"><a href="{% url 'home' %}">Home</a></li>
+        <li class="hideOnMobile"><a href="{% url 'about' %}">About Us</a></li>
+        <li class="hideOnMobile"><a href="{% url 'register' %}">Sign Up</a></li>
+        <li class="hideOnMobile"><a href="{% url 'login_view' %}">Sign In</a></li>
+        <li class="hideOnMobile"><a href="{% url 'help' %}">Help</a></li>
+        <li class="MenuButton" onclick="ShowSidebar()">
+          <a href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h2>🔔 Notifications</h2>
+  
+    {% for notif in notifications %}
+      <div 
+        class="notification{% if notif.read %} read{% endif %}" 
+        id="notif-{{ notif.id }}" 
+        role="alert" 
+        aria-live="polite"
+        style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; background-color: {% if notif.read %}#f1f1f1{% else %}#fff{% endif %};"
+      >
+        <div style="font-weight: {% if not notif.read %}bold{% else %}normal{% endif %};">
+          {{ notif.message }}
+        </div>
+  
+        <div class="timestamp" style="color: #888; font-size: 0.85rem; margin-top: 4px;">
+          {{ notif.timestamp|naturaltime }}
+        </div>
+  
+        {% if not notif.read %}
+          <button 
+            onclick="markAsRead({{ notif.id }})" 
+            class="mark-read-btn"
+            style="margin-top: 8px; background: rgb(32, 17, 161); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;"
+            aria-label="Mark notification as read"
+          >
+            Mark as Read
+          </button>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>No notifications yet.</p>
+    {% endfor %}
+  
+    <a 
+      href="{% url 'mark_notifications_read' %}" 
+      id="markAll" 
+      class="btn btn-primary" 
+      style="margin-top: 20px; display: inline-block; padding: 8px 14px; background: rgb(32, 17, 161); color: #fff; text-decoration: none; border-radius: 5px;"
+      aria-label="Mark all notifications as read"
+    >
+      ✅ Mark all as Read
+    </a>
+  </div>
+  
+
+  <script>
+    // ✅ Must be defined before using "csrftoken"
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  
+    // ✅ Define csrftoken globally
+    const csrftoken = getCookie("csrftoken");
+  
+    function markAsRead(notificationId) {
+      fetch("/dashboard/single-mark-as-read/", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notification_id: notificationId,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("✅ Marked as read:", data);
+          if (data.success) {
+            const notif = document.getElementById(`notif-${notificationId}`);
+            if (notif) notif.classList.add("read");
+          }
+        })
+        .catch((err) => {
+          console.error("❌ Failed to mark as read:", err);
+        });  
+      }
+    const markAllBtn = document.getElementById('markAll');
+    markAllBtn.addEventListener('click', () => {
+      const notifications = document.querySelectorAll('.notification');
+      notifications.forEach(note => {
+        note.classList.add('read');
+      });
+    });
+
+    function ShowSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.style.display = 'flex';
+    }
+
+    function HideSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.style.display = 'none';
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const bellIcon = document.getElementById("bellIcon");
+      const notificationCount = document.getElementById("notificationCount");
+      const notificationSound = document.getElementById("notificationSound");
+
+      let count = {{ notifications|length }};
+
+      const socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
+
+      socket.onopen = function () {
+        console.log("✅ WebSocket connection opened");
+      };
+
+      socket.onmessage = function (event) {
+        console.log("📩 New WebSocket message received", event.data);
+
+        try {
+          const data = JSON.parse(event.data);
+          const message = data.message || "🔔 You have a new notification";
+
+          count++;
+          notificationCount.textContent = count;
+          notificationCount.style.display = "inline-block";
+
+          if (notificationSound) {
+            notificationSound.play().catch((e) => {
+              console.warn("🔇 Sound could not be played:", e);
+            });
+          }
+
+          console.log("🔔 Message:", message);
+        } catch (err) {
+          console.error("❌ Error parsing WebSocket message:", err);
+        }
+      };
+
+      socket.onerror = function (error) {
+        console.error("❌ WebSocket error:", error);
+      };
+
+      socket.onclose = function () {
+        console.log("🔌 WebSocket connection closed");
+      };
+    });
+  </script>
+
+</body>
+
+</html>

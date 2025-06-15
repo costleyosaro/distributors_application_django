@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <title>Forgot Password</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background-color: rgb(2, 3, 88);
+      padding: 20px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 24px;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: rgb(2, 3, 88);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: rgb(2, 3, 88);
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      Reset Your Password
+    </div>
+    <div class="content">
+      <p>Hi! User</p>
+      <p>We received a request to reset your password for your Chiamo Multitrade account.</p>
+      <p>Click the button below to reset your password:</p>
+      <a href="{% url 'forgot_password' %}" class="button">Reset Password</a>
+      <p>If you didn't request this, you can safely ignore this email.</p>
+      <p class="footer">This link will expire in 1 hour.</p>
+      <p class="footer">If you have any questions, contact us at <a href="mailto:distributorapplicationphc@gmail.com">distributorapplicationphc@gmail.com</a>.</p>
+    </div>
+  </div>
+</body>
+</html>

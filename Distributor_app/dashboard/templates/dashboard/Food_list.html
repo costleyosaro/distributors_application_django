@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food List</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/Food_list.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    <style>
+        /* Search Bar Styling */
+        .header {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 8px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 5px 10px;
+            background: white;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 200px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+            padding: 5px;
+        }
+
+        .clear-btn {
+            text-decoration: none;
+            color: red;
+            font-size: 18px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Move trolley animation */
+        @keyframes moveTrolley {
+            0% { left: 10px; }
+            50% { left: 90vw; }
+            100% { left: 10px; }
+        }
+
+        #cart-toggle {
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            animation: moveTrolley 80s infinite linear alternate;
+            background: none;
+            border: none;
+        }
+
+        #cart {
+            position: fixed;
+            top: 0px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transform: scaleY(1);
+            transform-origin: top;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .cart-hidden {
+            transform: scaleY(0);
+            opacity: 0;
+        }
+        /* Cart badge styling */
+        .cart-badge {
+            position: absolute;
+            top: -5px;  /* Adjusts the position of the badge */
+            right: -5px; /* Adjusts the position of the badge */
+            background-color:blue;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 3px 5px;
+            border-radius: 50%;
+            display: inline-block;
+            min-width: 20px;
+            text-align: center;
+}
+
+    </style>
+</head>
+<body>
+    <div id="cart" class="cart-hidden">
+        <div id="cart_items"></div>
+        <div id="cart-total">Total: ₦0</div>
+    </div>
+    <button id="cart-toggle">
+        <span class="cart-icon">🛒</span>
+    </button>
+
+    <div class="header">
+        <form class="search-box" onsubmit="return false;">
+            <input type="text" id="searchInput" placeholder="🔍 Search Products..." onkeyup="searchProducts()">
+            <button type="button" onclick="searchProducts()">🔍</button>
+            <a href="javascript:void(0);" class="clear-btn" onclick="clearSearch()">✖</a>
+        </form>
+    </div>
+
+    <h2 class="listheader">Food List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product Name</th>
+                <th>Rating</th>
+                <th>Price</th>
+                <th>Available Stock</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="productTable">
+            {% for product in products %}
+            <tr>
+                <td><img src="{{ product.image.url }}" alt="{{ product.name }}" width="50"></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.rating }}</td>
+                <td>₦{{ product.price }}</td>
+                <td>{{ product.stock }}</td>
+                <td><input type="number" min="1" max="{{ product.stock }}" value="1"></td>
+                <td><button onclick="addToCart('{{ product.id }}')">Add to Cart</button></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No matching products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'Beverage_list' %}?category=beverage">Beverage List</a></li>
+            <li><a href="{% url 'Food_list' %}?category=food">Food List</a></li>
+            <li><a href="{% url 'Care_list' %}?category=care">Care List</a></li>
+            <li><a href="{% url 'Beauty_list' %}?category=beauty">Beauty List</a></li>
+        </ul>
+    </nav>
+
+    <button class="invoice" onclick="window.location.href='{% url 'generate_invoice' %}?category=food'">
+        Generate Invoice
+    </button>
+
+    <input type="hidden" id="cart-category" value="Food_list">
+    <script src="{% static 'js/combinedscript.js' %}"></script>
+
+    <script>
+        function searchProducts() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.querySelectorAll("#productTable tr");
+            rows.forEach(row => {
+                let productName = row.querySelector("td:nth-child(2)").innerText.toLowerCase();
+                row.style.display = productName.includes(input) ? "" : "none";
+            });
+        }
+
+        function clearSearch() {
+            document.getElementById("searchInput").value = "";
+            searchProducts();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartToggle = document.getElementById("cart-toggle");
+            const cart = document.getElementById("cart");
+            cartToggle.addEventListener("click", function () {
+                cart.classList.toggle("cart-hidden");
+            });
+        });
+    </script>
+</body>
+</html>

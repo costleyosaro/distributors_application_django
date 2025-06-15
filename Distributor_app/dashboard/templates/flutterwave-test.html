@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fund Wallet</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .toprow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: rgb(2, 3, 88) 2px solid;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .toprow img {
+      height: 4em;
+      width: 10em;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2em;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-weight: bold;
+      color: rgb(2, 3, 88);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      border-radius: 1em;
+      padding: 1em;
+    }
+
+    nav ul li a:hover {
+      background-color: rgb(152, 153, 243);
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: rgb(2, 3, 88);
+    }
+
+    form input[type="number"] {
+      width: 90%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    form button {
+      width: 95%;
+      padding: 12px;
+      background-color:rgb(2, 30, 59);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    form button:hover {
+      background-color:rgb(3, 22, 43);
+    }
+
+    .wallet-balance {
+      font-size: 20px;
+      margin-bottom: 30px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toprow">
+    <a href="{% url 'home' %}">
+      <img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Company Logo">
+    </a>
+
+    <nav>
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'login_view' %}">Login</a></li>
+        <li><a href="{% url 'logout_user' %}">Logout</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h2>💳 Fund Your Wallet</h2>
+
+    <div class="wallet-balance">
+      Wallet Balance: ₦{{ user.wallet_balance|default:"0.00" }}
+    </div>
+
+    <form id="paymentForm" data-callback="{{ callback_url }}" data-email="{{ user_email }}" data-name="{{ user_name }}">
+
+      {% csrf_token %}
+      <input type="number" name="amount" placeholder="Enter amount to fund (₦)" required min="100">
+      <button type="submit">Proceed to Fund Wallet</button>
+    </form>
+    
+  </div>
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+  <script>
+    const form = document.getElementById('paymentForm');
+  
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      const amountValue = parseFloat(form.amount.value);
+      if (!amountValue || amountValue < 100) {
+        alert("Please enter a valid amount (minimum ₦100).");
+        return;
+      }
+  
+      FlutterwaveCheckout({
+        public_key: "FLWPUBK_TEST-dc8e5e4bc300ad9ccf04a33ccb26d8a7-X",
+        tx_ref: "tx-" + Date.now(),
+        amount: amountValue,
+        currency: "NGN",
+        payment_options: "card, banktransfer",
+        redirect_url: form.dataset.callback,
+        customer: {
+          email: form.dataset.email,
+          name: form.dataset.name
+        },
+        customizations: {
+          title: "Wallet Funding",
+          description: "Fund your Chiamo Distributor portal wallet"
+        }
+      });
+    });
+  </script>
+  
+  
+</body>
+</html>
+
+

@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Status</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+</head>
+<body>
+    <h1>Payment Status</h1>
+    
+    {% if transaction %}
+        <p>Invoice ID: {{ transaction.invoice.invoice_id }}</p>
+        <p>Status: <strong>{{ transaction.status }}</strong></p>
+
+        {% if transaction.status == "success" %}
+            <p style="color: green;">✅ Your payment was successful!</p>
+        {% elif transaction.status == "pending" %}
+            <p style="color: orange;">⏳ Your payment is still pending. Please wait...</p>
+        {% else %}
+            <p style="color: red;">❌ Payment failed. Please try again.</p>
+        {% endif %}
+    
+    {% else %}
+        <p style="color: red;">Transaction not found!</p>
+    {% endif %}
+</body>
+</html>

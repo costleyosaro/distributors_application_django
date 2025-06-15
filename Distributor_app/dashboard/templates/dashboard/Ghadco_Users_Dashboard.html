@@ -1,0 +1,388 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users_Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{% static 'css/Dashboard_Styling.css' %}">
+
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="toprow">
+      <a href="{% url 'home' %}"><img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Logo"></a>
+      <nav>
+            <ul class="sidebar">
+              <li onclick=HideSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li><a href="{% url 'about' %}">About Us</a></li>
+              <li><a href="{% url 'register' %}">Sign Up</a></li>
+              <li><a href="{% url 'login_view' %}">Sign In</a></li>
+              <li><a href="{% url 'help' %}">Help</a></li>
+              <li><a href="{% url 'logout_user' %}">Logout</a></li>
+              <li><a href="{% url 'manage_account' %}" class="option"> Manage Account</a></li>
+            </ul> 
+          <ul>
+              <li class="hideOnMobile"><a href="{% url 'home' %}">Home</a></li>
+              <li class="hideOnMobile"><a href="{% url 'about' %}">About Us</a></li>
+              <li class="hideOnMobile"><a href="{% url 'register' %}">Sign Up</a></li>
+              <li class="hideOnMobile"><a href="{% url 'login_view' %}">Sign In</a></li>
+              <li class="hideOnMobile"><a href="{% url 'help' %}">Help</a></li>
+              <li class="hideOnMobile"><a href="{% url 'logout_user' %}">Logout</a></li>
+              <li class="MenuButton" onclick=ShowSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+
+          </ul>
+      </nav>
+    </div>
+
+-      <!--
+        <div class="dashboard">
+          <div class="account-section">
+            <h2>Manage Account</h2>
+            <form id="account-form">
+                <label>NIN:</label>
+                <input type="text" id="nin" placeholder="Enter NIN"><br>
+        
+                <label>Business Address:</label>
+                <input type="text" id="business_address" placeholder="Enter Address"><br>
+        
+                <label>Company Name:</label>
+                <input type="text" id="company_name" placeholder="Enter Company Name"><br>
+        
+                <button type="submit">Save Changes</button>
+            </form>
+          </div>
+          -->     
+        
+
+          <div class="dashboard">
+            <div class="dashboard-content">
+              <!-- LEFT: Balance + Fund Wallet -->
+              <div class="wallet-section">
+                <div class="wallet-balance">
+                ◼ Available Balance: ₦{{ user.wallet_balance|floatformat:2 }}
+                </div>
+                <a href="{% url 'fund_wallet' %}" class="fund-wallet-btn"> + Add Money</a>
+              </div>  
+              
+            <!-- Notification Section -->
+            <div class="notification-section">
+              <a href="{% url 'notifications' %}" class="notification-icon">
+                <span id="bellIcon" class="bell">🔔</span>
+                <span id="notificationCount" class="notification-count">0</span>
+              </a>
+            </div>
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                const count = {{ unread_count|default:0 }};
+                const countEl = document.getElementById("notificationCount");
+                const bellIcon = document.getElementById("bellIcon");
+            
+                if (count > 0) {
+                  countEl.textContent = count;
+                  countEl.style.display = "inline-block";
+                  bellIcon.classList.add("vibrate");
+                } else {
+                  countEl.style.display = "none";
+                  bellIcon.classList.remove("vibrate");
+                }
+              });
+            </script>
+            
+            
+                
+        
+            <!-- RIGHT SIDE: Welcome Text -->
+            <div style="display: flex; flex-direction: column; align-items: flex-end;">
+              <h1 style="margin-bottom: 5px;">Welcome, {{ user.username }}</h1>
+            </div> 
+
+        
+            <!-- Profile Picture Form -->
+            <form method="POST" enctype="multipart/form-data" action="{% url 'upload_profile_picture' %}" id="profilePicForm">
+                {% csrf_token %}
+                <div id="profile-container">
+                    {% if user.profile_picture %}
+                        <img id="Profile-Picture" src="{{ user.profile_picture.url }}" alt="Profile Picture">
+                    {% else %}
+                        <img id="Profile-Picture" src="{% static 'images/profile_photo.jpeg' %}" alt="Profile Picture">
+                    {% endif %}
+        
+                    <div id="profile-options">
+                        <label for="input-file" class="option">📷 Upload Image</label>
+                        <input type="file" name="profile_picture" id="input-file" accept="image/*">
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Automatically submit the form when file is selected -->
+        <script>
+            document.getElementById('input-file').addEventListener('change', function () {
+                if (this.files.length > 0) {
+                    document.getElementById('profilePicForm').submit();
+                }
+            });
+        </script>
+        
+        
+        
+
+        <div class="video-container">
+          <video autoplay muted loop playsinline class="background-video">
+              <source src="{% static 'images/Mamuda products ads ph.mp4' %}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="title">
+          <h1>PRODUCT CATEGORIES</h1>
+        </div>
+
+        <div class="categories">
+
+          <a href="{% url 'Beverage_list' %}" onclick="window.location.href=this.href; return false;">
+            <div class="products">
+              <video autoplay muted loop playsinline>
+                <source src="{% static 'images/bev-video.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <h4 class="bev-title">Beverage</h4>
+            </div>
+          </a>
+
+          <a href="{% url 'Food_list' %}">
+            <div class="products2">
+              <video autoplay muted loop playsinline>
+                <source src="{% static 'images/food-video.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+                </video>
+                <h4 class="food-title">Foods</h4>
+            </div>
+          </a>
+          
+          <a href="{% url 'Care_list' %}">
+              <div class="products3">
+                  <video autoplay muted loop playsinline>
+                    <source src="{% static 'images/care-video.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                  <h4 class="care-title">Care</h4>
+              </div>
+            </a> 
+            
+            <a href="{% url 'Beauty_list' %}">
+              <div class="products4">
+                  <video autoplay muted loop playsinline>
+                    <source src="{% static 'images/beauty-video.mp4' %}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                  <h4 class="beauty-title">Beauty</h4>
+              </div>
+            </a>
+      
+      </div>
+      
+      <section class="recent-transactions">
+        <h2>Recent Transactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Invoice</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Grand Total</th> <!-- ✅ Updated to Grand Total -->
+                    <th>Status</th> 
+                </tr>
+            </thead>
+            <tbody>
+              {% for payment in payments %}
+              <tr>
+                  <td>{{ payment.added_at|date:"Y-m-d H:i" }}</td>
+                  <td>{{ payment.invoice.invoice_id }}</td>
+                  <td>
+                      <!-- Assuming each payment has multiple payment_items, pick the category of the first item -->
+                      {% if payment.payment_items.all %}
+                          <a href="{% url 'transaction_history' %}?category={{ payment.payment_items.all.first.product.category }}&invoice={{ payment.invoice.invoice_id }}">
+                              {{ payment.payment_items.all.first.product.category }}
+                          </a>
+                      {% else %}
+                          No category
+                      {% endif %}
+                  </td> <!-- 🔥 Category now clickable -->
+                  <td>{{ payment.payment_items.all|length }}</td>
+                  <td>₦{{ payment.grand_total|floatformat:2 }}</td>  <!-- ✅ Grand Total Fixed -->
+                  <td><strong>{{ payment.status }}</strong></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7">No transactions found</td></tr>
+              {% endfor %}
+          
+            </tbody>
+        </table>
+        <div class="transaction-footer" style="text-align: right; margin-top: 10px;">
+          <a href="{% url 'transaction_history' %}" class="see-more-btn" style="display: inline-block; padding: 10px 15px; background-color: rgb(2, 2, 88); color: white; text-decoration: none; border-radius: 5px;">SEE MORE...</a>
+        </div>
+        <div class="filter-container">
+          <button class="time-filter active" data-filter="day">Day</button>
+          <button class="time-filter" data-filter="week">Week</button>
+          <button class="time-filter" data-filter="month">Month</button>
+          <button class="time-filter" data-filter="year">Year</button>
+        </div>
+      
+      
+        <div class="chart-container">
+          <canvas id="userPerformanceChart"></canvas>
+        </div>
+
+    </section>
+          
+      <footer class="ft">
+      
+        <hr class="hz1">
+      
+        <hr class="hz2">
+      
+            <div class="socials">
+      
+                  <div class="icons">
+                    <a href= "https://www.instagram.com/ghadco_ph?igsh=MW94em4zczlsd3N3dA%3D%3D&utm_source=qr" target="_blank">
+                        <img src="{% static 'images/Instagram_icon.png' %}" alt="Instagram icon">
+                    </a>  
+                  </div>
+      
+                  <div class="icons">
+                    <a href= "https://www.facebook.com/share/1BqNPR6azJ/?mibextid=wwXIfr" target="_blank">
+                        <img src="{% static 'images/facebookicon.png' %}" alt="facebook icon">
+                    </a>
+                  </div>
+      
+                  <div class="icons">
+                    <img src="{% static 'images/X.jpeg' %}" alt="x icon">
+                  </div>
+      
+                  <div class="icons">
+                    <a href= "https://www.tiktok.com/@ghadco_phc?_t=ZM-8vBzSIznPHj&_r=1" target="_blank">
+                        <img src="{% static 'images/tiktok_icon-removebg-preview.png' %}" alt="youtube icon">
+                    </a>
+                  </div>
+
+      
+            </div>
+      
+        <p>&copy; 2025 Ghadco PH | All Rights Reserved</p>
+      
+      </footer>
+      
+  </div>
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  
+    const csrftoken = getCookie("csrftoken");
+  
+    function markAsRead(notificationId) {
+      fetch("/dashboard/single-mark-as-read/", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          notification_id: notificationId,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("✅ Marked as read:", data);
+          if (data.success) {
+            const notif = document.getElementById(`notif-${notificationId}`);
+            if (notif) notif.classList.add("read");
+    
+            // ✅ WebSocket will update the bell counter on the dashboard
+          }
+        })
+        .catch((err) => {
+          console.error("❌ Failed to mark as read:", err);
+        });
+    }
+    
+    document.addEventListener("DOMContentLoaded", function () {
+      const bellIcon = document.getElementById("bellIcon");
+      const notificationCount = document.getElementById("notificationCount");
+      const notificationSound = document.getElementById("notificationSound");
+    
+      const socket = new WebSocket('ws://' + window.location.host + '/ws/notifications/');
+    
+      socket.onopen = function () {
+        console.log("✅ WebSocket connection opened");
+      };
+    
+      socket.onmessage = function (event) {
+        try {
+          const data = JSON.parse(event.data);
+          const message = data.message || "🔔 You have a new notification";
+          const unreadCount = data.unread_count || 0;
+    
+          if (notificationCount) {
+            notificationCount.textContent = unreadCount;
+            notificationCount.style.display = unreadCount > 0 ? "inline-block" : "none";
+          }
+    
+          if (notificationSound) {
+            notificationSound.play().catch((e) => {
+              console.warn("🔇 Sound could not be played:", e);
+            });
+          }
+    
+          if (bellIcon) {
+            bellIcon.classList.add("vibrate");
+            setTimeout(() => {
+              bellIcon.classList.remove("vibrate");
+            }, 500);
+          }
+    
+          console.log("🔔 Message:", message);
+    
+        } catch (err) {
+          console.error("❌ Error parsing WebSocket message:", err);
+        }
+      };
+    
+      socket.onerror = function (error) {
+        console.error("❌ WebSocket error:", error);
+      };
+    
+      socket.onclose = function () {
+        console.log("🔌 WebSocket connection closed");
+      };
+    }); // ✅ This closes the DOMContentLoaded listener
+    
+      
+    
+  </script>
+  
+
+  <script src="{% static 'js/Dashboard_Scripting.js' %}"></script>
+</body>
+</html>

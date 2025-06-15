@@ -1,0 +1,165 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <title>Transaction History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .header h2 {
+            color: #333;
+            margin: 0;
+        }
+        .search-box {
+            display: flex;
+            gap: 5px;
+        }
+        .search-box input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .search-box button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-box a {
+            color: red;
+            text-decoration: none;
+            padding: 8px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+            font-size: 16px;
+        }
+        td {
+            font-size: 14px;
+            color: #333;
+        }
+        img {
+            width: 50px;
+            height: auto;
+            border-radius: 5px;
+        }
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: center;
+            }
+            .search-box {
+                margin-top: 10px;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header with Title & Search Box -->
+        <div class="header">
+            <h2>Transaction History</h2>
+            <form method="get" action="{% url 'transaction_history' %}" class="search-box">
+                <input type="text" name="invoice_number" value="{{ search_query }}" placeholder="Enter Invoice Number">
+                <button type="submit">🔍 Search</button>
+                {% if search_query %}
+                    <a href="{% url 'transaction_history' %}">✖ Clear</a>
+                {% endif %}
+            </form>
+        </div>
+
+<!-- Transactions Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Invoice</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+            {% for item in payment.payment_items.all %}
+            <tr>
+                <td>{{ payment.invoice.invoice_id }}</td>
+                <td>{{ item.product }}</td>
+                <td>₦{{ item.product.price|floatformat:2 }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₦{{ item.total_price|floatformat:2 }}</td>  <!-- ✅ Total per item -->
+                <td><strong>{{ payment.status }}</strong></td>
+                <td>{{ payment.added_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+            <!-- ✅ Grand Total Row (Only appears once per invoice) -->
+            <tr style="background: #f0f0f0; font-weight: bold;">
+                <td colspan="4">Grand Total for Invoice {{ payment.invoice.invoice_id }}:</td>
+                <td colspan="3">₦{{ payment.grand_total|floatformat:2 }}</td> <!-- ✅ Grand Total -->
+            </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">No transaction history found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    </div>
+
+</body>
+</html>
+

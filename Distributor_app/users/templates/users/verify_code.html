@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <title>Enter Verification Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: rgb(2, 3, 88);
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #555555;
+    }
+    .code-input {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .code-input input {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      text-align: center;
+      border: 1px solid #dddddd;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: rgb(2, 3, 88);
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: darkred;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #777777;
+    }
+    a {
+      color: rgb(2, 3, 88);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enter Verification Code</h2>
+    <p>We've sent a 4-digit code to your registered email. Please enter it below to verify your identity.</p>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="code-input">
+        <input type="text" name="digit1" maxlength="1" required>
+        <input type="text" name="digit2" maxlength="1" required>
+        <input type="text" name="digit3" maxlength="1" required>
+        <input type="text" name="digit4" maxlength="1" required>
+      </div>
+      <button type="submit">Verify Code</button>
+      {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    </form>
+    <p class="footer">Didn't receive the code? <a href="{% url 'forgot_password' %}">Resend Code</a></p>
+  </div>
+</body>
+</html>

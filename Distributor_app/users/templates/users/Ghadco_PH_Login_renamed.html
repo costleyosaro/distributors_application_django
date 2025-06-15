@@ -1,0 +1,445 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghadco_PH_Login</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <style>
+  /* General styling */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    border-bottom: rgb(2, 3, 88) 2px solid;
+  }
+
+  .toprow img {
+    height: 4em;
+    width: 10em;
+  }
+
+  footer {
+    background-color: rgb(2, 3, 88);
+    color: white;
+    font-size: 16px;
+    height: 100px;
+    text-align: center;
+    padding: 10px;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  nav {
+    margin: 1em;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 4em;
+    margin: 0;
+  }
+
+  nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: rgb(2, 3, 88);
+    text-transform: uppercase;
+    font-size: .8rem;
+    border-radius: 1em;
+    padding: 1em;
+  }
+
+  nav ul li a:hover {
+    background-color: rgb(152, 153, 243);
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .login-box {
+  color: white;
+  min-height: 450px;
+  width: 90%;
+  max-width: 450px;
+  background-color: rgb(2, 3, 88);
+  border-radius: 15px;
+  margin: 20px;
+  padding: 80px 30px 25px 30px;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  height: 40px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid white;
+  margin: 15px 0;
+  padding: 0 15px;
+  border-radius: 10px;
+  outline: none;
+}
+
+.input-field:focus, .input-field:valid {
+  border: 2px solid gold;
+}
+
+.input-group label {
+  position: absolute;
+  top: 23px;
+  left: 15px;
+  transition: .3s;
+}
+
+.input-field:focus ~ label, .input-field:valid ~ label {
+  top: 1px;
+  font-size: 12px;
+  color: gold;
+}
+
+.forgot-pass {
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.forgot-pass a {
+  color: gold;
+  font-size: 12px;
+}
+
+.input-submit {
+  background: transparent;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid white;
+  margin-top: 20px;
+  transition: .4s ease-out;
+  color: white;
+}
+
+.input-submit:hover {
+  box-shadow: 0 1px 10px gold;
+  background: gold;
+  cursor: pointer;
+  color: rgb(2, 3, 88);
+  font-weight: bold;
+}
+
+.header-img {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.header-img img {
+  width: 100px;
+}
+
+.header-text {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.input-group img {
+  height: 30px;
+  width: 30px;
+  position: absolute;
+  top: 20px;
+  left: 400px;
+  cursor: pointer;
+  }
+
+    /* Sidebar section */
+
+    .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 200px;
+    z-index: 999;
+    background-color: white;
+    backdrop-filter: blur(10px);
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .MenuButton {
+    display: none;
+  }
+
+  .sidebar li {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .sidebar a {
+    width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .hideOnMobile {
+        display: none;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .wrap {
+        width: 100%;
+      }
+      footer {
+        width: 97%;
+        font-size: 18px;
+        padding-bottom: 70px;
+        margin-top: 75px;
+      }
+      .sidebar a {
+        font-size: 22px;
+      }
+      .input-group img {
+        position: absolute;
+        left: 400px;
+      }
+      .input-group{
+        width: 100%;
+      }
+      .toprow {
+        width: 100%;
+      }
+      nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 2em;
+      margin: 0;
+      }
+    }
+
+  @media (max-width: 768px) {
+    .hideOnMobile {
+        display: none;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .wrap {
+        width: 100%;
+      }
+      footer {
+        width: 97%;
+        font-size: 20px;
+        padding-bottom: 6.5rem;
+        margin-top: 75px;
+      }
+      .sidebar a {
+        font-size: 1.6rem;
+      }
+      .input-group img {
+        position: absolute;
+        left: 400px;
+      }
+      .input-group{
+        width: 100%;
+      }
+      .toprow {
+        width: 100%;
+      }
+      .login-box {
+        width: 70%;
+      }
+      nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 3em;
+      margin: 0;
+      font-family: 'Permanent Marker', cursive;
+      }
+    }
+    
+
+    @media (max-width: 480px) {
+      .hideOnMobile {
+        display: none;
+      }
+      .MenuButton {
+        display: block;
+      }
+      .wrap {
+        width: 100%;
+      }
+      footer {
+        width: 96%;
+        font-size: 12px;
+        padding-bottom: 50px;
+      }
+      .sidebar a {
+        font-size: 18px;
+      }
+      .input-group img {
+        position: absolute;
+        left: 200px;
+      }
+      .input-group{
+        width: 100%;
+      }
+      .toprow {
+        width: 100%;
+      }
+      .login-box {
+        width: 70%;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        gap: 1em;
+        margin: 0;
+        font-family: 'Permanent Marker', cursive;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="toprow">
+      <a href="{% url 'home' %}"><img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png'%}" alt="Logo"></a>
+      <nav>
+            <ul class="sidebar">
+              <li onclick=HideSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></a></li>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li><a href="{% url 'about' %}">About Us</a></li>
+              <li><a href="{% url 'register' %}">Sign Up</a></li>
+              <li><a href="{% url 'login_view' %}">Sign In</a></li>
+              <li><a href="{% url 'help' %}">Help</a></li>
+          </ul>
+          <ul>
+              <li class="hideOnMobile"><a href="{% url 'home' %}">Home</a></li>
+              <li class="hideOnMobile"><a href="{% url 'about' %}">About Us</a></li>
+              <li class="hideOnMobile"><a href="{% url 'register' %}">Sign Up</a></li>
+              <li class="hideOnMobile"><a href="{% url 'login_view' %}">Sign In</a></li>
+              <li class="hideOnMobile"><a href="{% url 'help' %}">Help</a></li>
+              <li class="MenuButton" onclick=ShowSidebar()><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>
+          </ul>
+      </nav>
+  </div>
+
+  <div class="container">
+
+      <div class="login-box">
+
+        <div class="header-img">
+          <img src="{% static 'images/login-img.png' %}" alt="Login Icon">
+        </div>
+
+        <form method="POST" action="{% url 'login_view' %}">
+          {% csrf_token %}
+          {% if messages %}
+              {% for message in messages %}
+                  <p class="{% if message.tags %}{{ message.tags }}-message{% endif %}">{{ message }}</p>
+              {% endfor %}
+          {% endif %}
+          <div class="header-text">
+              <p>Login</p>
+          </div>
+      
+        <div class="input-group">
+            <input type="text" class="input-field" id="Email" name="username" required>
+            <label for="Email">Email</label>
+        </div>
+    
+        <div class="input-group">
+            <input type="Password" class="input-field" id="Password" name="password" required>
+            <label for="Password">Password</label>
+            <img 
+                src="{% static 'images/white-eye-hidden.png' %}" alt="Toggle Password Visibility" onclick="togglePasswordVisibility()" class="pass-icon" id="pass-icon">                 
+        </div>
+        
+        <div class="forgot-pass">
+          <a href="{% url 'REQUEST_template' %}">Forgot password?</a>
+        </div>
+  
+      <div class="input-group">
+          <button type="submit" class="input-submit">Login</button>
+      </div>
+
+        <div class="forgot-pass">
+          <p><a href="{% url 'register' %}">Don't have an account? Register</a></p>
+        </div>
+
+      </div>
+
+        </form>
+
+  </div>
+
+  <footer class="ft">
+    <p>&copy; 2024 Ghadco PH</p>
+    <p id="footnote">
+      We are advocates of long-term relationships with our suppliers and customers.
+      We pride ourselves on supplier relations that date back from 1991 and hope to continue to bridge new associations and links.
+      In addition, building strong relations with our clients is paramount to us as we try and fulfill their product needs to the best of our ability.
+    </p>
+  </footer>
+</div>
+
+  <script type="text/javascript">
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById("Password");
+      const icon = document.getElementById("pass-icon");
+  
+      if (passwordField.type === "password") {
+          passwordField.type = "text";
+          icon.src = "{% static 'images/white-eye-visible.png' %}"; // Visible eye icon
+      } else {
+          passwordField.type = "password";
+          icon.src = "{% static 'images/white-eye-hidden.png' %}"; // Hidden eye icon
+      }
+  }
+  
+
+    /* the sidebar logic */
+    function ShowSidebar() {
+          const sidebar = document.querySelector('.sidebar')
+          sidebar.style.display = 'flex';
+        }
+
+        function HideSidebar () {
+          const sidebar = document.querySelector('.sidebar')
+          sidebar.style.display = 'none';
+        }
+  </script>
+
+</body>
+</html>
