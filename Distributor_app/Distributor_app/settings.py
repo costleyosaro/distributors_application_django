@@ -104,7 +104,7 @@ MIDDLEWARE = [
 CSRF_COOKIE_HTTPONLY = False  # Ensure CSRF cookie is readable by JavaScript
 CSRF_COOKIE_SAMESITE = 'Lax'  # Allow CSRF token to work on your pages
 
-ROOT_URLCONF = 'Distributor_app.urls'
+ROOT_URLCONF = 'Distributor_app.Distributor_app.urls'
 
 TEMPLATES = [
     {
