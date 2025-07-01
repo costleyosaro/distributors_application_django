@@ -36,8 +36,9 @@ ENVIRONMENT = env('ENVIRONMENT', default="Production")
 
 STATIC_URL = '/static/'  # This is required
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # This tells Django where to look for static files
+    BASE_DIR.parent / 'static',
 ]
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media settings
