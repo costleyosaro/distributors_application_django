@@ -2,10 +2,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from dashboard.models import Invoice, PaymentItem, Payment, Notification
+from Distributor_app.dashboard.models import Invoice, PaymentItem, Payment, Notification
 from django.db.models import Sum
 from datetime import date
-from dashboard.models import Product, InvoiceItem
+from Distributor_app.dashboard.models import Product, InvoiceItem
 from django.core.mail import send_mail
 from django.conf import settings
 import re

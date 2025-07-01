@@ -29,7 +29,7 @@ from django.contrib.auth import logout
 
 from .models import Notification  # ✅ Import Notification model
 from django.db.models import Max
-from dashboard.models import Notification  # Make sure this import is at the top
+from Distributor_app.dashboard.models import Notification  # Make sure this import is at the top
 
 
 
@@ -288,9 +288,9 @@ from django.contrib.auth.decorators import login_required
 from .models import CartItem, Transaction, Payment
 from django.db.models import Max  # Import the Invoice model
 
-from dashboard.models import Payment, PaymentItem
-from dashboard.models import Invoice
-from dashboard.models import CartItem
+from Distributor_app.dashboard.models import Payment, PaymentItem
+from Distributor_app.dashboard.models import Invoice
+from Distributor_app.dashboard.models import CartItem
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
