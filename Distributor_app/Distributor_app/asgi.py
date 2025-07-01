@@ -14,7 +14,7 @@ import django
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
-import dashboard.routing  # <- make sure this is correct
+import Distributor_app.dashboard.routing  # <- make sure this is correct
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Distributor_app.settings")
 django.setup()
@@ -23,7 +23,7 @@ application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            dashboard.routing.websocket_urlpatterns
+            Distributor_app.dashboard.routing.websocket_urlpatterns
         )
     ),
 })
