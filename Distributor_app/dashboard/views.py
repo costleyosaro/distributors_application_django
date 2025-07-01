@@ -5,7 +5,7 @@ import os
 from django.utils.decorators import method_decorator
 from django.conf import settings
 logger = logging.getLogger(__name__)
-from users.models import CustomUser  # Import your user model
+from Distributor_app.users.models import CustomUser  # Import your user model
 from django.views.decorators.csrf import csrf_exempt
 from .models import Product, CartItem
 from django.shortcuts import get_object_or_404
@@ -15,7 +15,7 @@ from .models import Invoice
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from users.models import CustomUser
+from Distributor_app.users.models import CustomUser
 import json
 from django.http import JsonResponse
 import json
