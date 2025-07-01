@@ -64,7 +64,8 @@ else:
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "695f-105-113-9-218.ngrok-free.app",  # Add your Ngrok URL here
+    "distributors-application-django.onrender.com",
+    # Add your Ngrok URL here
 ]
 
 
