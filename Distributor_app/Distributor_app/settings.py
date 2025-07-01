@@ -43,6 +43,18 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+POSTGRESS_LOCALLY=False
+if ENVIRONMENT=='production' or POSTGRESS_LOCALLY==True:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUD_NAME'),
+    'API_KEY': env('CLOUD_API_KEY'),
+    'API_SECRET': env('CLOUD_API_SECRET')
+}
 
 # Ensure media directory exists
 if not os.path.exists(MEDIA_ROOT):
@@ -79,6 +91,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'Distributor_app.dashboard',
     'Distributor_app.users',
     'clearcache',
@@ -141,7 +155,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-POSTGRESS_LOCALLY=False
+POSTGRESS_LOCALLY=True
 if ENVIRONMENT=='production' or POSTGRESS_LOCALLY==True:
     DATABASES['default']= dj_database_url.parse(env('DATABASE_URL'))
 
@@ -223,14 +237,7 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-# Cloudinary Configuration
-cloudinary.config(
-    cloud_name=env('CLOUDINARY_CLOUD_NAME'),
-    api_key=env('CLOUDINARY_API_KEY'),
-    api_secret=env('CLOUDINARY_API_SECRET'),
-)
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 USERNAME_BLACKLIST = [
     "admin",
