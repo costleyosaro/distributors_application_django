@@ -5,5 +5,6 @@ class DashboardConfig(AppConfig):
 
 
     def ready(self):
-        import dashboard.signals  # Make sure signals are loaded
+        import Distributor_app.dashboard.signals
+  # Make sure signals are loaded
 
