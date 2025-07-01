@@ -7,11 +7,11 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 from Distributor_app.users.models import CustomUser  # Import your user model
 from django.views.decorators.csrf import csrf_exempt
-from .models import Product, CartItem
+from Distributor_app.dashboard.models import Product, CartItem
 from django.shortcuts import get_object_or_404
 from django.middleware.csrf import get_token
 import json
-from .models import Invoice
+from Distributor_app.dashboard.models import Invoice
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -21,13 +21,13 @@ from django.http import JsonResponse
 import json
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .models import Payment
+from Distributor_app.dashboard.models import Payment
 
 from django.db.models import Q
-from .models import Product
+from Distributor_app.dashboard.models import Product
 from django.contrib.auth import logout  
 
-from .models import Notification  # ✅ Import Notification model
+from Distributor_app.dashboard.models import Notification  # ✅ Import Notification model
 from django.db.models import Max
 from Distributor_app.dashboard.models import Notification  # Make sure this import is at the top
 
@@ -73,7 +73,7 @@ def get_csrf_token(request):
 
 
 from django.http import JsonResponse
-from .models import CartItem, Product  # Ensure correct imports
+from Distributor_app.dashboard.models import CartItem, Product  # Ensure correct imports
 from django.contrib.auth.decorators import login_required
 import json
 
@@ -118,7 +118,7 @@ def add_to_cart(request):
 
 
 from django.http import JsonResponse
-from .models import CartItem
+from Distributor_app.dashboard.models import CartItem
 
   # ✅ Allow frontend to send POST requests
 from django.views.decorators.csrf import csrf_exempt # Ensure CartItem model is imported
@@ -162,7 +162,7 @@ def remove_from_cart(request):
     
     
 from django.http import JsonResponse
-from .models import CartItem
+from Distributor_app.dashboard.models import CartItem
 
 @login_required
 def cart_data(request):
@@ -285,7 +285,7 @@ def manage_account(request):
 import uuid
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import CartItem, Transaction, Payment
+from Distributor_app.dashboard.models import CartItem, Transaction, Payment
 from django.db.models import Max  # Import the Invoice model
 
 from Distributor_app.dashboard.models import Payment, PaymentItem
@@ -422,7 +422,7 @@ def payment_page(request):
 
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Payment
+from Distributor_app.dashboard.models import Payment
 
 def transaction_history(request):
     # Get the filters from the URL parameters
@@ -460,7 +460,7 @@ def transaction_history(request):
 
 
 
-from .models import Transaction
+from Distributor_app.dashboard.models import Transaction
 import uuid  # Import UUID for unique invoice numbers
 
 def save_transaction(user, cart_items, invoice_id):
@@ -479,11 +479,11 @@ def save_transaction(user, cart_items, invoice_id):
 
 
 from django.shortcuts import redirect, get_object_or_404
-from .models import CartItem, Transaction, Invoice  # Import your invoice model
+from Distributor_app.dashboard.models import CartItem, Transaction, Invoice  # Import your invoice model
  # Ensure you import Invoice
 
 from django.shortcuts import redirect
-from .models import CartItem, Transaction, Invoice  
+from Distributor_app.dashboard.models import CartItem, Transaction, Invoice  
 
 def checkout(request):
     user = request.user
@@ -512,7 +512,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .models import Transaction
+from Distributor_app.dashboard.models import Transaction
 
 # PAYSTACK_SECRET_KEY = "sk_test_c6842ff37140097c3c7a8f195ca70c96b233e22a"
 
@@ -631,12 +631,12 @@ def logout_user(request):
 
 
 from django.http import JsonResponse
-from dashboard.models import Payment  # Import your Payments model
+from Distributor_app.dashboard.models import Payment  # Import your Payments model
 
 from django.db.models import Sum
 from django.http import JsonResponse
 from datetime import datetime
-from .models import Payment
+from Distributor_app.dashboard.models import Payment
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth, TruncYear
 
 
@@ -736,7 +736,7 @@ def payment_status(request, invoice_id):
     return render(request, "dashboard/payment_status.html", {"error": "Transaction not found"})
 
 from django.shortcuts import render
-from .models import Notification
+from Distributor_app.dashboard.models import Notification
 
 from django.contrib.auth.decorators import login_required
 
@@ -809,7 +809,7 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .forms import ProfilePictureForm  # You'll need to create this form.
+from Distributor_app.dashboard.forms import ProfilePictureForm  # You'll need to create this form.
 
 @login_required
 def upload_profile_picture(request):
@@ -832,7 +832,7 @@ from django.http import JsonResponse
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import Wallet
+from Distributor_app.dashboard.models import Wallet
 import uuid
 from django.conf import settings
 
@@ -847,7 +847,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Wallet
+from Distributor_app.dashboard.models import Wallet
 from django.urls import reverse
 def fund_wallet(request):
     Wallet.objects.get_or_create(user=request.user)
@@ -863,7 +863,7 @@ import requests
 from django.conf import settings
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Wallet
+from Distributor_app.dashboard.models import Wallet
 
 
 def fund_wallet_callback(request):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib import admin
-from .models import Product, CartItem
+from Distributor_app.dashboard.models import Product, CartItem
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
