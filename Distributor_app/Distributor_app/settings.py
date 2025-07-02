@@ -36,8 +36,9 @@ ENVIRONMENT = env('ENVIRONMENT', default="Production")
 
 STATIC_URL = '/static/'  # This is required
 STATICFILES_DIRS = [
-    BASE_DIR.parent / 'static',
+    BASE_DIR / 'static',
 ]
+
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
