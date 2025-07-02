@@ -45,7 +45,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-POSTGRESS_LOCALLY=False
+POSTGRESS_LOCALLY=True
 if ENVIRONMENT=='production' or POSTGRESS_LOCALLY==True:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:
@@ -95,8 +95,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
-    'Distributor_app.dashboard',
-    'Distributor_app.users',
+    'dashboard',
+    'users',
     'clearcache',
     'rest_framework',
     'channels',
@@ -121,7 +121,7 @@ MIDDLEWARE = [
 CSRF_COOKIE_HTTPONLY = False  # Ensure CSRF cookie is readable by JavaScript
 CSRF_COOKIE_SAMESITE = 'Lax'  # Allow CSRF token to work on your pages
 
-ROOT_URLCONF = 'Distributor_app.Distributor_app.urls'
+ROOT_URLCONF = 'Distributor.urls'
 
 TEMPLATES = [
     {
@@ -139,9 +139,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Distributor_app.wsgi.application'
+WSGI_APPLICATION = 'Distributor.wsgi.application'
 # Channels Configuration
-ASGI_APPLICATION = "Distributor_app.asgi.application"
+ASGI_APPLICATION = "Distributor.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",  # Use Redis for production

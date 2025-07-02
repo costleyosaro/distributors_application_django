@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from Distributor_app.users.forms import CustomUserCreationForm
+from users.forms import CustomUserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail, EmailMultiAlternatives

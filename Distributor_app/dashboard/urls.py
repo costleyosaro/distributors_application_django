@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from Distributor_app.dashboard.views import dashboard, fund_wallet, fund_wallet_callback, upload_profile_picture, mark_single_notification_read, user_performance_data, mark_notifications_read, manage_account, notifications_page, logout_user, Beverage_list, checkout, Care_list, Food_list,Beauty_list, generate_invoice,payment_page, add_to_cart, remove_from_cart,get_csrf_token, cart_data, transaction_history, payment_status  
+from dashboard.views import dashboard, fund_wallet, fund_wallet_callback, upload_profile_picture, mark_single_notification_read, user_performance_data, mark_notifications_read, manage_account, notifications_page, logout_user, Beverage_list, checkout, Care_list, Food_list,Beauty_list, generate_invoice,payment_page, add_to_cart, remove_from_cart,get_csrf_token, cart_data, transaction_history, payment_status  
 
 urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),

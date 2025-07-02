@@ -11,8 +11,8 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('Ghadco_PH(1)/', views.redirect_to_home, name="redirect_to_home"),  # ✅ Fixed path
     path('help/', views.help, name="help"),
-    path('users/', include('Distributor_app.users.urls')),
-    path("dashboard/", include("Distributor_app.dashboard.urls")),
+    path('users/', include('users.urls')),
+    path("dashboard/", include("dashboard.urls")),
 ]
 
 # Serve media files in development

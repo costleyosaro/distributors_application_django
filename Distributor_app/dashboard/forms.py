@@ -1,5 +1,5 @@
 from django import forms
-from Distributor_app.users.models import CustomUser
+from users.models import CustomUser
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
