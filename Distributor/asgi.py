@@ -1,13 +1,10 @@
 """
-ASGI config for Distributor_app project.
-
 It exposes the ASGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
-# your_project/asgi.py
 
 import os
 import django
