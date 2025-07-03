@@ -19,8 +19,9 @@ from environ import Env
 BASE_DIR = Path(__file__).resolve().parent.parent  
 
 # Initialize environ
+# Initialize environ
 env = Env()
-Env.read_env(BASE_DIR / ".env") # ✅ Reads .env correctly
+env.read_env(BASE_DIR / "Distributor" / ".env")  # ✅ Correct
 
 # Now use environment variables
 SECRET_KEY = env("SECRET_KEY")
