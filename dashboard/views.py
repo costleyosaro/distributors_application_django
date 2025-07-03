@@ -851,8 +851,7 @@ from dashboard.models import Wallet
 from django.urls import reverse
 def fund_wallet(request):
     Wallet.objects.get_or_create(user=request.user)
-
-    return render(request, 'dashboard/fund_wallet.html', {
+    return render(request, 'dashboard/flutterwave-test.html', {
         'callback_url': request.build_absolute_uri(reverse('fund_wallet_callback')),
         'user_email': request.user.email,
         'user_name': request.user.get_full_name() or request.user.username
