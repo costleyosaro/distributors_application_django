@@ -51,6 +51,12 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     
 
+
+
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUD_NAME'),
     'API_KEY': env('CLOUD_API_KEY'),
@@ -92,8 +98,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary_storage',
     'cloudinary',
+    'cloudinary_storage',
     'dashboard',
     'users',
     'clearcache',
@@ -233,13 +239,6 @@ DEFAULT_FROM_EMAIL = 'distributorapplicationphc@gmail.com'  # Default sender ema
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-
-
-
 USERNAME_BLACKLIST = [
     "admin",
     "theboss",
@@ -248,9 +247,7 @@ USERNAME_BLACKLIST = [
     "support",
     "administrator"
 ]
-
-MEDIA_URL = '/media/'  
-
+ 
 # Flutterwave API Keys
 FLW_PUBLIC_KEY = env("FLW_PUBLIC_KEY")
 FLW_SECRET_KEY = env("FLW_SECRET_KEY")
