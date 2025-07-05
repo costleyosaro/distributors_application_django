@@ -105,23 +105,24 @@
             </div> 
 
         
-            <!-- Profile Picture Form -->
-            <form method="POST" enctype="multipart/form-data" action="{% url 'upload_profile_picture' %}" id="profilePicForm">
-                {% csrf_token %}
-                <div id="profile-container">
-                    {% if user.profile_picture %}
-                        <img id="Profile-Picture" src="{{ user.profile_picture.url }}" alt="Profile Picture">
-                    {% else %}
-                        <img id="Profile-Picture" src="{% static 'images/profile_photo.jpeg' %}" alt="Profile Picture">
-                    {% endif %}
-        
-                    <div id="profile-options">
-                        <label for="input-file" class="option">📷 Upload Image</label>
-                        <input type="file" name="profile_picture" id="input-file" accept="image/*">
-                    </div>
+        {% load cloudinary %}
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'upload_profile_picture' %}" id="profilePicForm">
+            {% csrf_token %}
+            <div id="profile-container">
+                {% if user.profile_picture %}
+                    <img id="Profile-Picture" src="{% cloudinary_url user.profile_picture %}" alt="Profile Picture">
+                {% else %}
+                    <img id="Profile-Picture" src="{% static 'images/profile_photo.jpeg' %}" alt="Profile Picture">
+                {% endif %}
+
+                <div id="profile-options">
+                    <label for="input-file" class="option">📷 Upload Image</label>
+                    <input type="file" name="profile_picture" id="input-file" accept="image/*">
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
+
         
         <!-- Automatically submit the form when file is selected -->
         <script>
