@@ -88,6 +88,7 @@ ALLOWED_HOSTS = [
 ]
 
 
+print("Cloudinary settings:", CLOUDINARY_STORAGE)
 
 # Application definition
 
