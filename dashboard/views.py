@@ -815,11 +815,14 @@ from dashboard.forms import ProfilePictureForm  # You'll need to create this for
 def upload_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_picture'):
         user = request.user
-        user.profile_picture = request.FILES['profile_picture']  # Cloudinary will handle the upload
-        user.save()  # Save the image URL to the database
-        return redirect('dashboard')  # Redirect to the dashboard or the page you want after upload
+        user.profile_picture = request.FILES['profile_picture']
+        user.save()
+
+        print("Uploaded to:", user.profile_picture.url)  # 👈 Check this in logs
+        return redirect('dashboard')
 
     return HttpResponse("Failed to upload profile picture.", status=400)
+
 
 
 
