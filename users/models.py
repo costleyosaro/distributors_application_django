@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.conf import settings 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from cloudinary.models import CloudinaryField
 
 def validate_username_blacklist(username):
     if username.lower() in [name.lower() for name in settings.USERNAME_BLACKLIST]:
@@ -39,6 +40,7 @@ class CustomUser(AbstractUser):
         },
     )
     name = models.CharField(max_length=255, blank=True, null = True)
+    profile_picture = CloudinaryField('image', blank=True, null=True)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=11)
