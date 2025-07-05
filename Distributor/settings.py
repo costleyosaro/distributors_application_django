@@ -43,12 +43,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media settings
 
-POSTGRESS_LOCALLY=True
-if ENVIRONMENT=='production' or POSTGRESS_LOCALLY==True:
+if ENVIRONMENT == 'production':
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:
+    MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    
+
+    # Ensure media directory exists
+    if not os.path.exists(MEDIA_ROOT):
+        os.makedirs(MEDIA_ROOT)
+
+
 
 
 
@@ -61,10 +66,6 @@ CLOUDINARY_STORAGE = {
     'API_KEY': env('CLOUD_API_KEY'),
     'API_SECRET': env('CLOUD_API_SECRET')
 }
-
-# Ensure media directory exists
-if not os.path.exists(MEDIA_ROOT):
-    os.makedirs(MEDIA_ROOT)
 
 
 # Quick-start development settings - unsuitable for production
