@@ -811,15 +811,20 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from dashboard.forms import ProfilePictureForm  # You'll need to create this form.
 
+from cloudinary.exceptions import Error as CloudinaryError
+
 @login_required
 def upload_profile_picture(request):
     if request.method == 'POST' and request.FILES.get('profile_picture'):
         user = request.user
-        user.profile_picture = request.FILES['profile_picture']
-        user.save()
-
-        print("Uploaded to:", user.profile_picture.url)  # 👈 Check this in logs
-        return redirect('dashboard')
+        try:
+            user.profile_picture = request.FILES['profile_picture']
+            user.save()
+            print("Uploaded to:", user.profile_picture.url)
+            return redirect('dashboard')
+        except CloudinaryError as e:
+            print("Cloudinary upload failed:", e)
+            return HttpResponse("Upload failed: Cloudinary error", status=500)
 
     return HttpResponse("Failed to upload profile picture.", status=400)
 
