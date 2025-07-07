@@ -112,7 +112,7 @@
                 {% csrf_token %}
                 <div id="profile-container">
                     {% if user.profile_picture %}
-                        <img id="Profile-Picture" src="{% cloudinary_url user.profile_picture %}" alt="Profile Picture">
+                        <img id="Profile-Picture" src="{% cloudinary_url user.profile_picture %}" alt="Profile Picture"> 
                     {% else %}
                         <img id="Profile-Picture" src="{% static 'images/profile_photo.jpeg' %}" alt="Profile Picture">
                     {% endif %}
