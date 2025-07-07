@@ -17,7 +17,6 @@ from environ import Env
 BASE_DIR = Path(__file__).resolve().parent.parent  
 
 # Initialize environ
-# Initialize environ
 env = Env()
 env.read_env(BASE_DIR / "Distributor" / ".env")  # ✅ Correct
 
@@ -61,12 +60,20 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
-    'CLOUD_API_KEY': os.getenv('CLOUD_API_KEY'),
-    'CLOUD_API_SECRET': os.getenv('CLOUD_API_SECRET'),
+# ✅ Set Cloudinary config directly
+cloudinary.config( 
+  cloud_name = env("CLOUD_NAME"), 
+  api_key = env("CLOUD_API_KEY"), 
+  api_secret = env("CLOUD_API_SECRET"),
+  secure = True
+)
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env("CLOUD_NAME"),
+    'CLOUD_API_KEY': env("CLOUD_API_KEY"),
+    'CLOUD_API_SECRET': env("CLOUD_API_SECRET"),
 }
+
 
 
 # Quick-start development settings - unsuitable for production
