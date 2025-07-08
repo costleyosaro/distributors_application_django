@@ -198,23 +198,34 @@ function createProductBadge(product) {
     return badgeContainer;
 }
 
+function getCloudinaryImageUrl(imageFileName) {
+    const CLOUDINARY_BASE = "https://res.cloudinary.com/djq2ywwry/image/upload/image_products/";
+    return CLOUDINARY_BASE + imageFileName;
+}
 
-// Populate Product Table
+// Dynamically update image links
+products = products.map(product => ({
+    ...product,
+    image: getCloudinaryImageUrl(product.image)
+}));
+
+// Generate product table
+// NOTE: Assumes each product.image is a full Cloudinary URL
+// Example: "https://res.cloudinary.com/your-cloud-name/image/upload/vXYZ/image_products/product1.jpg"
+
+// Generate product table
 function generateTable() {
     if (!productTable) return;
     productTable.innerHTML = '';
-    console.log("📊 Generating product table...");
 
     products.forEach((product, index) => {
-        console.log(`📝 Product #${index}:`, product); // ✅ Check product details
-
         const row = document.createElement('tr');
-        // Create the badge for the product
-        const badgeContainer = createProductBadge(product);  // Create the badge only for specific products
+        const badgeContainer = createProductBadge(product);
+
         row.innerHTML = `
-            <td><img src="/media/image_products/${product.image}" class="product-img"></td>
+            <td><img src="${product.image}" class="product-img" onerror="this.src='/media/placeholder.jpg'"></td>
             <td>
-                ${badgeContainer.outerHTML}  <!-- Insert badge container here -->
+                ${badgeContainer.outerHTML}
                 ${product.name}
             </td>
             <td>${product.rating}</td>
@@ -230,6 +241,8 @@ function generateTable() {
         productTable.appendChild(row);
     });
 }
+
+
 
 
 function addToCart(index, productId) {
