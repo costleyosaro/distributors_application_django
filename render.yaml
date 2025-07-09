@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: distributors_application_django
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn Distributor.wsgi:application"
+    staticPublishPath: staticfiles
+    staticPublishRoutes:
+      - source: /media/(.*)
+        destination: /media/\1
