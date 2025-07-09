@@ -20,7 +20,6 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     image = models.ImageField(upload_to="image_products/", blank=True, null=True)
-    cloud_image_url = models.URLField(blank=True, null=True)
     rating = models.CharField(max_length=10)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()

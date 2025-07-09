@@ -112,3 +112,6 @@ for category, items in products_by_category.items():
 Product.objects.bulk_create(products)
 print("✅ Products successfully added!")
 
+
+
+

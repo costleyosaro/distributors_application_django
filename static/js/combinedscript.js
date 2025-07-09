@@ -198,27 +198,19 @@ function createProductBadge(product) {
     return badgeContainer;
 }
 
-function getCloudinaryImageUrl(imageFileName) {
-    const CLOUDINARY_BASE = "https://res.cloudinary.com/djq2ywwry/image/upload/image_products/";
+// --- Removed Cloudinary dependency ---
+// Now using direct image paths (from Django media URLs)
 
-    // Remove any leading "images/" or "./images/"
-    const cleanedFileName = imageFileName.replace(/^(\.\/)?images\//, '');
+// Example: product.image = "/media/products/zizou.png"
+// Django must serve media files correctly on production!
 
-    return CLOUDINARY_BASE + cleanedFileName;
-}
+// No more Cloudinary. Just use Django media URLs directly.
 
-
-// Dynamically update image links
 products = products.map(product => ({
     ...product,
-    image: getCloudinaryImageUrl(product.image)
+    image: `/media/image_products/images/${product.image.split('/').pop()}`
 }));
 
-// Generate product table
-// NOTE: Assumes each product.image is a full Cloudinary URL
-// Example: "https://res.cloudinary.com/your-cloud-name/image/upload/vXYZ/image_products/product1.jpg"
-
-// Generate product table
 function generateTable() {
     if (!productTable) return;
     productTable.innerHTML = '';
@@ -228,8 +220,10 @@ function generateTable() {
         const badgeContainer = createProductBadge(product);
 
         row.innerHTML = `
-            <td><img src="${product.image}" class="product-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/150'">
-
+            <td>
+                <img src="${product.image}" class="product-img"
+                     onerror="this.onerror=null; this.src='/static/images/placeholder.png'">
+            </td>
             <td>
                 ${badgeContainer.outerHTML}
                 ${product.name}
@@ -242,7 +236,10 @@ function generateTable() {
                 <input type="number" id="qty-${index}" value="100" min="100" max="${product.stock}" class="quantity-input">
                 <button onclick="changeQuantity(${index}, 100)">+</button>
             </td>
-            <td><button onclick="addToCart(${index}, ${product.id})" ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button></td>
+            <td>
+                <button onclick="addToCart(${index}, ${product.id})"
+                        ${product.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
+            </td>
         `;
         productTable.appendChild(row);
     });
