@@ -42,15 +42,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media settings
 
-if ENVIRONMENT == 'production':
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-else:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-    # Ensure media directory exists
-    if not os.path.exists(MEDIA_ROOT):
-        os.makedirs(MEDIA_ROOT)
+# Optional: Create media folder if not exists (still fine)
+if not os.path.exists(MEDIA_ROOT):
+    os.makedirs(MEDIA_ROOT)
 
 
 
@@ -96,7 +93,6 @@ ALLOWED_HOSTS = [
 ]
 
 
-print("Cloudinary settings:", CLOUDINARY_STORAGE)
 
 # Application definition
 
