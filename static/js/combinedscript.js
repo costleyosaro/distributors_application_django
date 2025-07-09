@@ -223,7 +223,8 @@ function generateTable() {
         const badgeContainer = createProductBadge(product);
 
         row.innerHTML = `
-            <td><img src="${product.image}" class="product-img" onerror="this.src='/media/placeholder.jpg'"></td>
+            <td><img src="${product.image}" class="product-img" onerror="this.onerror=null; this.src='https://via.placeholder.com/150'">
+
             <td>
                 ${badgeContainer.outerHTML}
                 ${product.name}
