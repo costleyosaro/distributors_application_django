@@ -281,7 +281,7 @@ function addToCart(index, productId) {
     
 
 
-    const cartItem = {
+    let cartItem = {
         product_id: productId,
         name: product.name,
         price: product.price,
