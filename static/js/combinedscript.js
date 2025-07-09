@@ -200,8 +200,13 @@ function createProductBadge(product) {
 
 function getCloudinaryImageUrl(imageFileName) {
     const CLOUDINARY_BASE = "https://res.cloudinary.com/djq2ywwry/image/upload/image_products/";
-    return CLOUDINARY_BASE + imageFileName;
+
+    // Remove any leading "images/" or "./images/"
+    const cleanedFileName = imageFileName.replace(/^(\.\/)?images\//, '');
+
+    return CLOUDINARY_BASE + cleanedFileName;
 }
+
 
 // Dynamically update image links
 products = products.map(product => ({
