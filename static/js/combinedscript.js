@@ -155,7 +155,7 @@ function getCSRFToken() {
     return csrfToken;
 }
 
-const products = productsByCategory[category] || [];
+let products = productsByCategory[category] || [];
 console.log("📦 Loaded Products:", products); // ✅ Check if products array is populated
 
 const cartKey = `cart_${category}`;
@@ -241,6 +241,7 @@ function generateTable() {
         productTable.appendChild(row);
     });
 }
+
 
 
 
