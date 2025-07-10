@@ -202,7 +202,7 @@ function createProductBadge(product) {
 
 products = products.map(product => ({
     ...product,
-    image: `/media/image_products/${product.image.split('/').pop()}`
+    image: `/media/image_products/images/${product.image.split('/').pop()}`
 }));
 
 function generateTable() {
