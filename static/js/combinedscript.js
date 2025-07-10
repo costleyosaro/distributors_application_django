@@ -198,17 +198,11 @@ function createProductBadge(product) {
     return badgeContainer;
 }
 
-// --- Removed Cloudinary dependency ---
-// Now using direct image paths (from Django media URLs)
 
-// Example: product.image = "/media/products/zizou.png"
-// Django must serve media files correctly on production!
-
-// No more Cloudinary. Just use Django media URLs directly.
 
 products = products.map(product => ({
     ...product,
-    image: `/media/image_products/images/${product.image.split('/').pop()}`
+    image: `/media/image_products/${product.image.split('/').pop()}`
 }));
 
 function generateTable() {
