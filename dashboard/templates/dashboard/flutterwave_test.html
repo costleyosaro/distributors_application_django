@@ -132,19 +132,19 @@
     
   </div>
   <script src="https://checkout.flutterwave.com/v3.js"></script>
-  <script>
+    <script>
     const form = document.getElementById('paymentForm');
-  
+
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
-  
-      const amountValue = parseFloat(form.amount.value);
-      if (!amountValue || amountValue < 100) {
+        e.preventDefault();
+
+        const amountValue = parseFloat(form.amount.value);
+        if (!amountValue || amountValue < 100) {
         alert("Please enter a valid amount (minimum ₦100).");
         return;
-      }
-  
-      FlutterwaveCheckout({
+        }
+
+        FlutterwaveCheckout({
         public_key: "FLWPUBK-f267f243546283a0239373f9a4717d84-X",
         tx_ref: "tx-" + Date.now(),
         amount: amountValue,
@@ -152,20 +152,21 @@
         payment_options: "card, banktransfer",
         redirect_url: form.dataset.callback,
         customer: {
-          email: form.dataset.email,
-          name: form.dataset.name
+            email: form.dataset.email,
+            name: form.dataset.name
         },
         callback: function (data) {
-      // ✅ Do your post-payment processing here
-          window.location.href = `/callback?transaction_id=${data.transaction_id}&status=${data.status}`;
-    },
-        customizations: {
-          title: "Fund Your Wallet",
-          description: "Payment for account funding",
-          logo: "https://yourdomain.com/static/logo.png",
+            window.location.href = `/callback?transaction_id=${data.transaction_id}&status=${data.status}`;
         },
+        customizations: {
+            title: "Fund Your Wallet",
+            description: "Payment for account funding",
+            logo: "https://yourdomain.com/static/logo.png"
+        }
+        });
     });
-  </script>
+    </script>
+
   
   
 </body>

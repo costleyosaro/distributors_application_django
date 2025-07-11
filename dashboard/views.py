@@ -844,10 +844,7 @@ from dashboard.models import Wallet
 import uuid
 from django.conf import settings
 
-def create_wallet_if_needed(user):
-    """Create a wallet for the user if one doesn't exist."""
-    wallet, _ = Wallet.objects.get_or_create(user=user)
-    return wallet
+
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -857,9 +854,10 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from dashboard.models import Wallet
 from django.urls import reverse
+
 def fund_wallet(request):
     Wallet.objects.get_or_create(user=request.user)
-    return render(request, 'dashboard/flutterwave-test.html', {
+    return render(request, 'dashboard/flutterwave_test.html', {
         'callback_url': request.build_absolute_uri(reverse('fund_wallet_callback')),
         'user_email': request.user.email,
         'user_name': request.user.get_full_name() or request.user.username
