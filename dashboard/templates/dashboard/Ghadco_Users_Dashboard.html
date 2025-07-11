@@ -67,7 +67,7 @@
               <!-- LEFT: Balance + Fund Wallet -->
               <div class="wallet-section">
                 <div class="wallet-balance">
-                ◼ Available Balance: ₦{{ user.wallet_balance|floatformat:2 }}
+                ◼ Available Balance: ₦{{ user.wallet.balance|floatformat:2 }}
                 </div>
                 <a href="{% url 'fund_wallet' %}" class="fund-wallet-btn"> + Add Money</a>
               </div>  

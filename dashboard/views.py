@@ -908,6 +908,42 @@ def fund_wallet_callback(request):
 
     return JsonResponse({'error': 'Invalid or failed payment.'}, status=400)
 
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+from dashboard.models import Wallet
+from django.contrib.auth.models import User
+
+@csrf_exempt
+def flutterwave_webhook(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            status = data.get("status")
+            event = data.get("event")
+
+            if status == "successful" and event == "charge.completed":
+                tx_data = data["data"]
+                amount = float(tx_data["amount"])
+                customer_email = tx_data["customer"]["email"]
+
+                # Match email to user
+                try:
+                    user = User.objects.get(email=customer_email)
+                    wallet, _ = Wallet.objects.get_or_create(user=user)
+                    wallet.balance += amount
+                    wallet.save()
+                    return HttpResponse(status=200)
+                except User.DoesNotExist:
+                    return JsonResponse({"error": "User not found"}, status=404)
+
+            return HttpResponse(status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return HttpResponse(status=405)
 
 
 
