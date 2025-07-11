@@ -30,6 +30,7 @@ from django.contrib.auth import logout
 from dashboard.models import Notification  # ✅ Import Notification model
 from django.db.models import Max
 from dashboard.models import Notification  # Make sure this import is at the top
+from django.contrib import messages
 
 
 
@@ -896,9 +897,17 @@ def fund_wallet_callback(request):
             data = response.json()
 
             # ✅ Check API returned success and transaction is successful
-            if data.get("status") == "success" and data["data"].get("status") == "successful":
+            data = response.json()
+            
+
+            # ✅ Safer access & flexible transaction status check
+            transaction_status = data.get("data", {}).get("status")
+            print(data)
+            if data.get("status") == "success" and transaction_status in ["successful", "completed"]:
                 amount = float(data["data"]["amount"])
                 customer_email = data["data"]["customer"]["email"]
+                ...
+
 
                 # ✅ Optional safety check — match email to user
                 if request.user.email != customer_email:
