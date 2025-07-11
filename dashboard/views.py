@@ -878,6 +878,7 @@ import requests
 from django.conf import settings
 from dashboard.models import Wallet
 from django.contrib import messages
+from decimal import Decimal
 
 def fund_wallet_callback(request):
     status = request.GET.get('status')
@@ -904,7 +905,7 @@ def fund_wallet_callback(request):
             transaction_status = data.get("data", {}).get("status")
             print(data)
             if data.get("status") == "success" and transaction_status in ["successful", "completed"]:
-                amount = float(data["data"]["amount"])
+                amount = Decimal(data["data"]["amount"])
                 customer_email = data["data"]["customer"]["email"]
                 ...
 
