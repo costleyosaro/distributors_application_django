@@ -127,6 +127,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {
+    message_constants.SUCCESS: 'success',
+    message_constants.ERROR: 'danger',
+}
 # settings.py
 
 CSRF_COOKIE_HTTPONLY = False  # Ensure CSRF cookie is readable by JavaScript

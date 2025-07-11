@@ -871,13 +871,21 @@ from django.contrib.auth.decorators import login_required
 from dashboard.models import Wallet
 
 
+from django.shortcuts import redirect
+from django.http import JsonResponse
+import requests
+from django.conf import settings
+from dashboard.models import Wallet
+from django.contrib import messages
+
 def fund_wallet_callback(request):
     status = request.GET.get('status')
     transaction_id = request.GET.get('transaction_id')
 
-    if status == 'successful' and transaction_id:
+    # ✅ Accept both 'completed' and 'successful' to continue verification
+    if status in ['completed', 'successful'] and transaction_id:
         try:
-            # Verify the transaction with Flutterwave
+            # Verify transaction with Flutterwave
             verify_url = f"https://api.flutterwave.com/v3/transactions/{transaction_id}/verify"
             headers = {
                 "Authorization": f"Bearer {settings.FLW_SECRET_KEY}",
@@ -887,19 +895,24 @@ def fund_wallet_callback(request):
             response = requests.get(verify_url, headers=headers)
             data = response.json()
 
+            # ✅ Check API returned success and transaction is successful
             if data.get("status") == "success" and data["data"].get("status") == "successful":
                 amount = float(data["data"]["amount"])
                 customer_email = data["data"]["customer"]["email"]
 
-                # Optional but secure: Match transaction email with current user
+                # ✅ Optional safety check — match email to user
                 if request.user.email != customer_email:
                     return JsonResponse({'error': 'Email mismatch'}, status=403)
 
+                # ✅ Fund the wallet
                 wallet, _ = Wallet.objects.get_or_create(user=request.user)
                 wallet.balance += amount
                 wallet.save()
+                
+                messages.success(request, f"Wallet funded successfully with ₦{amount:.2f}!")
 
-                return JsonResponse({'message': 'Wallet funded successfully.'})
+                # ✅ Redirect to dashboard after success
+                return redirect('dashboard')
 
             return JsonResponse({'error': 'Payment verification failed'}, status=400)
 
