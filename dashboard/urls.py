@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from dashboard.views import dashboard,flutterwave_webhook, fund_wallet, fund_wallet_callback, upload_profile_picture, mark_single_notification_read, user_performance_data, mark_notifications_read, manage_account, notifications_page, logout_user, Beverage_list, checkout, Care_list, Food_list,Beauty_list, generate_invoice,payment_page, add_to_cart, remove_from_cart,get_csrf_token, cart_data, transaction_history, payment_status  
+from dashboard.views import dashboard, process_wallet_payment, transfer_to_bank, transfer_webhook, transfer_receipt, flutterwave_webhook, fund_wallet, fund_wallet_callback, upload_profile_picture, mark_single_notification_read, user_performance_data, mark_notifications_read, manage_account, notifications_page, logout_user, Beverage_list, checkout, Care_list, Food_list,Beauty_list, generate_invoice,payment_page, add_to_cart, remove_from_cart,get_csrf_token, cart_data, transaction_history, payment_status  
 
 urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
@@ -29,8 +29,14 @@ urlpatterns = [
     path('fund_wallet/', fund_wallet, name='fund_wallet'),
     path('fund_wallet_callback/', fund_wallet_callback, name='fund_wallet_callback'),
     path('webhooks_flutterwave/', flutterwave_webhook, name='flutterwave_webhook'),
+    path('transfer_to_bank/', transfer_to_bank, name='transfer_to_bank'),
+    path('transfer_webhook/', transfer_webhook, name='transfer_webhook'),
+    path('process_wallet_payment/', process_wallet_payment, name='process_wallet_payment'),
+    path('transfer_receipt/<str:reference>/', transfer_receipt, name='transfer_receipt'),
 
 ]
+
+
 
 
 

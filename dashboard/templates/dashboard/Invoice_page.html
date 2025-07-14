@@ -10,9 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
   <style>
-        /* Basic Styling */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -89,53 +87,47 @@
             color: white;
         }
 
-
         #customer-name {
             width: 250px;
         }
 
-        /* Responsive Media Queries */
+        @media (max-width: 1024px) {
+            .invoice-container {
+                padding: 15px;
+            }
+            h2 {
+                font-size: 1.6em;
+            }
+            table {
+                font-size: 14px;
+            }
+        }
 
-/* For tablets (iPads, 768px to 1024px) */
-@media (max-width: 1024px) {
-    .invoice-container {
-        padding: 15px;
-    }
-    h2 {
-        font-size: 1.6em;
-    }
-    table {
-        font-size: 14px;
-    }
-}
-
-/* For phones (up to 768px) */
-@media (max-width: 768px) {
-    body {
-        margin: 10px;
-        padding: 10px;
-    }
-    .invoice-container {
-        width: 100%;
-        padding: 10px;
-    }
-    .invhead {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    h2 {
-        font-size: 1.4em;
-    }
-    table {
-        font-size: 12px;
-    }
-    button {
-        padding: 8px 12px;
-        font-size: 0.9em;
-    }
-}
-
-    </style>
+        @media (max-width: 768px) {
+            body {
+                margin: 10px;
+                padding: 10px;
+            }
+            .invoice-container {
+                width: 100%;
+                padding: 10px;
+            }
+            .invhead {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            h2 {
+                font-size: 1.4em;
+            }
+            table {
+                font-size: 12px;
+            }
+            button {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+  </style>
 </head>
 <body>
 
@@ -144,8 +136,11 @@
             <h4>LOGO</h4>
             <h2>Invoice</h2>
             <p><strong>Invoice No:</strong>{{ invoice_id }}</p>
-
+            <script>
+              sessionStorage.setItem("invoiceId", "{{ invoice_id }}");
+            </script>
         </div>
+
         <p><strong>Date:</strong> <span id="invoice-date"></span></p>
         <p>
             <strong>Customer Name:</strong>
@@ -175,52 +170,49 @@
                 </tr>
                 <tr>
                     <td colspan="3"><strong>Grand Total (₦):</strong></td>
-                    <td id="grand-total">₦0.00</td>
+                    <td id="grand-total">₦{{ payment.grand_total }}</td>
                 </tr>
             </tfoot>
-            
         </table>
         
-    
         <div class="buttons">
             <button class="print-btn" onclick="printInvoice()">Print Invoice</button>
             <button class="download-btn" onclick="downloadInvoiceAsPDF()">Download Invoice as PDF</button>
             <button class="back-btn" onclick="window.location.href='{% url 'dashboard' %}'">Back to Dashboard</button>
-            <button class="pay-btn" onclick="window.location.href='{% url 'payment_page' %}'">Make Payment</button>
+            <button class="pay-btn" onclick="window.location.href='{% url 'transfer_to_bank' %}'">Make Payment</button>
         </div>
-        
     </div>
-    
+
     <script>
-        const EXCHANGE_RATE = 1600; 
-        const MAINTENANCE_PERCENT = 0.005;
-    
-        function loadInvoice() {
+        document.addEventListener("DOMContentLoaded", function () {
+            const EXCHANGE_RATE = 1600;
+            const MAINTENANCE_PERCENT = 0.005;
+
             const invoiceData = sessionStorage.getItem("uiCartItems");
             const cartItems = invoiceData ? JSON.parse(invoiceData) : [];
-    
+
             const invoiceItemsContainer = document.getElementById("invoice-items");
             const grandTotalElement = document.getElementById("grand-total");
             const dateElement = document.getElementById("invoice-date");
             const feeElement = document.getElementById("maintenance-fee");
             const goodsTotalElement = document.getElementById("goods-total");
-    
+
             if (!invoiceItemsContainer || !grandTotalElement || !dateElement || !feeElement || !goodsTotalElement) {
                 console.error("Some invoice elements are missing in the HTML.");
                 return;
             }
-    
+
             dateElement.textContent = new Date().toLocaleDateString();
-    
             invoiceItemsContainer.innerHTML = "";
+
             let goodsTotal = 0;
-    
+
             cartItems.forEach(item => {
                 const price = parseFloat(item.price) || 0;
                 const quantity = parseInt(item.quantity) || 0;
                 const itemTotal = price * quantity;
                 goodsTotal += itemTotal;
-    
+
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item.name}</td>
@@ -230,21 +222,23 @@
                 `;
                 invoiceItemsContainer.appendChild(row);
             });
-    
-            // Calculate maintenance fee
+
             const maintenanceFeeNaira = goodsTotal * MAINTENANCE_PERCENT;
             const maintenanceFeeUSD = maintenanceFeeNaira / EXCHANGE_RATE;
-            const finalTotal = goodsTotal + maintenanceFeeNaira;
-    
-            // Set values in the invoice
+
+            // Set visible values
             goodsTotalElement.textContent = `₦${goodsTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
             feeElement.textContent = `$${maintenanceFeeUSD.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-            grandTotalElement.textContent = `₦${finalTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-        }
 
-    
-    
-        // Print invoice (requires customer name)
+            // ✅ Override Grand Total
+            const overrideAmount = 50.00;
+            grandTotalElement.textContent = `₦${overrideAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+
+            // ✅ Store override for transfer page
+            sessionStorage.setItem("overriddenAmount", overrideAmount);
+        });
+
+        // ✅ Print invoice function
         function printInvoice() {
             const customerName = document.getElementById("customer-name").value;
             if (!customerName) {
@@ -253,23 +247,19 @@
             }
             window.print();
         }
-    
-        // Download invoice as an HTML file
+
+        // ✅ PDF download function
         function downloadInvoiceAsPDF() {
-            // Select the invoice container (make sure it has the class "invoice-container")
             const invoiceContainer = document.querySelector(".invoice-container");
             if (!invoiceContainer) {
                 console.error("Invoice container not found!");
                 return;
             }
-          
-            // Use html2canvas to capture the invoice container as an image
+
             html2canvas(invoiceContainer).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
-                // Use jsPDF (for UMD version, access via window.jspdf.jsPDF)
                 const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
                 const pageWidth = pdf.internal.pageSize.getWidth();
-                // Calculate the PDF image height based on the canvas dimensions
                 const imgProps = pdf.getImageProperties(imgData);
                 const pdfWidth = pageWidth;
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
@@ -279,9 +269,8 @@
                 console.error("Error generating PDF:", error);
             });
         }
-        // Load invoice when the page loads
-        window.onload = loadInvoice;
     </script>
+
       
 </body>
 </html>

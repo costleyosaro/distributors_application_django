@@ -293,6 +293,7 @@ from dashboard.models import Payment, PaymentItem
 from dashboard.models import Invoice
 from dashboard.models import CartItem
 from django.contrib.auth import get_user_model
+from decimal import Decimal, ROUND_HALF_UP
 
 User = get_user_model()
 
@@ -354,7 +355,7 @@ def generate_invoice(request):
         )
     # views.py
 
-        from decimal import Decimal, ROUND_HALF_UP
+
 
     MAINTENANCE_FEE_PERCENTAGE = Decimal('0.015')
 
@@ -362,6 +363,9 @@ def generate_invoice(request):
 
     maintenance_fee = (grand_total * MAINTENANCE_FEE_PERCENTAGE).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
     final_total = grand_total + maintenance_fee
+    # FOR TESTING PURPOSES ONLY
+    final_total = Decimal('50.00')  # Simulate a small total
+    print(final_total)
 
     # Update payment object
     payment.total_amount = grand_total  # Goods only
@@ -508,114 +512,6 @@ def checkout(request):
     return redirect("generate_invoice")  # Redirect to invoice page after checkout
 
 
-
-import json
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from dashboard.models import Transaction
-
-# PAYSTACK_SECRET_KEY = "sk_test_c6842ff37140097c3c7a8f195ca70c96b233e22a"
-
-
-
-
-# from django.views.decorators.csrf import csrf_exempt
-# from django.http import JsonResponse, HttpResponseRedirect
-# import json
-# from .models import Payment, Products, PaymentItem, Transaction
-# from django.contrib.auth import get_user_model
-# User = get_user_model()  # Correctly reference the swapped user model
-
-
-
-# from django.http import JsonResponse, HttpResponseRedirect
-# from django.views.decorators.csrf import csrf_exempt
-# import json
-# import re
-# from django.http import JsonResponse
-# from dashboard.models import Payment, Products, Transaction
-# from django.contrib.auth import get_user_model
-
-
-# @csrf_exempt
-# def paystack_webhook(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "Invalid request method"}, status=400)
-
-#     try:
-#         data = json.loads(request.body)
-#         print("Webhook received!", data)  # Debugging
-
-#         if data.get("event") == "charge.success":
-#             payment_data = data.get("data", {})
-#             invoice_id = payment_data.get("metadata", {}).get("invoice_id")
-#             status = payment_data.get("status")
-
-#             print(f"Received invoice_id: {invoice_id}")  # Debugging
-#             if not invoice_id or not isinstance(invoice_id, str):
-#                 return JsonResponse({"error": "Invalid or missing invoice_id"}, status=400)
-
-#             if not re.match(r"^\d+-\d+$", invoice_id):
-#                 return JsonResponse({"error": "Invalid invoice ID format"}, status=400)
-
-#             amount = payment_data.get("amount", 0)
-#             if amount:
-#                 amount = int(amount) / 100  # Convert kobo to Naira safely
-
-#             user_id = payment_data.get("metadata", {}).get("user_id")
-#             business_name = payment_data.get("metadata", {}).get("business_name")
-#             product_category = payment_data.get("metadata", {}).get("product_category")
-#             product_details = payment_data.get("metadata", {}).get("products", [])
-
-#             User = get_user_model()
-#             try:
-#                 user = User.objects.get(id=user_id)
-#             except User.DoesNotExist:
-#                 return JsonResponse({"error": "User not found"}, status=404)
-
-#             try:
-#                 invoice_obj = Invoice.objects.get(invoice_id=invoice_id)
-#             except Invoice.DoesNotExist:
-#                 return JsonResponse({"error": f"Invoice '{invoice_id}' not found"}, status=404)
-
-#             new_total = sum(product["price"] * product["quantity"] for product in product_details)
-
-#             payment = Payment.objects.create(
-#                 user=user,
-#                 business_name=business_name,
-#                 invoice=invoice_obj,  # ✅ Keep as string in Payment
-#                 amount=amount,
-#                 total_amount=new_total,
-#                 product_category=product_category,
-#             )
-
-#             for product in product_details:
-#                 product_obj, _ = Products.objects.get_or_create(
-#                     name=product["name"],
-#                     defaults={"price": product["price"], "category": product_category}
-#                 )
-
-#                 Transaction.objects.create(
-#                     user=user,
-#                     invoice=invoice_obj,  # ✅ Pass instance, not string
-#                     product_name=product_obj.name,
-#                     product_image="",  # ⚠️ Handle image upload separately
-#                     price=product_obj.price,
-#                     quantity=product["quantity"],
-#                     total_price=product_obj.price * product["quantity"],
-#                     status=status
-#                 )
-
-#             return JsonResponse({"message": "Payment recorded successfully"}, status=201)
-
-#         return JsonResponse({"message": "Webhook received"}, status=200)
-
-#     except json.JSONDecodeError:
-#         return JsonResponse({"error": "Invalid JSON"}, status=400)
-#     except Exception as e:
-#         print(f"Unexpected error: {e}")
-#         return JsonResponse({"error": "Internal server error"}, status=500)
 
 
 
@@ -970,7 +866,89 @@ def flutterwave_webhook(request):
 
 
 
+import uuid
+import requests
+from decimal import Decimal
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from .models import Wallet, WalletTransfer
+
+@csrf_exempt
+def transfer_webhook(request):
+    import json
+    payload = json.loads(request.body)
+
+    status = payload.get("data", {}).get("status")
+    reference = payload.get("data", {}).get("reference")
+
+    try:
+        transfer = WalletTransfer.objects.get(reference=reference)
+        if status == "SUCCESSFUL":
+            transfer.status = 'successful'
+        elif status == "FAILED":
+            transfer.status = 'failed'
+        else:
+            transfer.status = 'pending'
+        transfer.save()
+    except WalletTransfer.DoesNotExist:
+        pass  # Log or handle missing reference
+
+    return JsonResponse({"message": "Webhook received"}, status=200)
+
+
+# views.py
+def transfer_receipt(request, reference):
+    transaction = get_object_or_404(WalletTransfer, reference=reference, user=request.user)
+    return render(request, 'dashboard/receipt.html', {'transaction': transaction})
 
 
 
+from django.shortcuts import render
 
+def transfer_to_bank(request):
+    latest_payment = Payment.objects.filter(user=request.user).order_by('-added_at').first()
+    context = {
+        "company_name": "Chiamo Multitrade Nigeria Limited",
+        "company_account_number": "7018329357",
+        "company_bank_name": "Opay",
+        "payment": latest_payment
+    }
+    return render(request, 'dashboard/transfer_form.html', context)
+
+
+
+from decimal import Decimal
+from django.shortcuts import redirect
+from django.contrib import messages
+
+from dashboard.models import WalletTransfer
+
+@login_required
+def process_wallet_payment(request):
+    if request.method == 'POST':
+        amount = Decimal(request.POST.get('amount', 0))
+        invoice_id = request.POST.get('invoice_id')
+
+        wallet = Wallet.objects.get(user=request.user)
+
+        if wallet.balance < amount:
+            messages.error(request, "Insufficient wallet balance.")
+            return redirect('transfer_to_bank')
+
+        # Deduct wallet balance
+        wallet.balance -= amount
+        wallet.save()
+
+        # ✅ Get existing WalletTransfer linked to this invoice
+        try:
+            transfer = WalletTransfer.objects.get(user=request.user, reference=invoice_id)
+        except WalletTransfer.DoesNotExist:
+            messages.error(request, "No matching transfer found for this invoice.")
+            return redirect('transfer_to_bank')
+
+        # ✅ Redirect using reference
+        return redirect('transfer_receipt', reference=transfer.reference)
+
+    return redirect('dashboard')

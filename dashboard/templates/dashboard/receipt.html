@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Transfer Receipt</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fc;
+      color: #021E3B;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      background-color: #021E3B;
+      padding: 1em 2em;
+    }
+
+    .topbar img {
+      height: 40px;
+    }
+
+    .receipt-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #021E3B;
+      margin-bottom: 20px;
+    }
+
+    .receipt-detail {
+      margin: 20px 0;
+      padding: 15px;
+      border-left: 4px solid #00B2E1;
+      background: #f2faff;
+    }
+
+    .receipt-detail p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .status {
+      font-weight: bold;
+      color: green;
+    }
+
+    .status.failed {
+      color: red;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back-link a {
+      text-decoration: none;
+      color: #00B2E1;
+      font-weight: bold;
+    }
+
+    .back-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <img src="{% static 'images/CHIAMO_MULTITRADE-removebg-preview(1).png' %}" alt="Company Logo">
+  </div>
+
+  <div class="receipt-container">
+    <h2>🧾 Transfer Receipt</h2>
+
+    <div class="receipt-detail">
+      <p><strong>Account Name:</strong> {{ transfer.account_name }}</p>
+      <p><strong>Account Number:</strong> {{ transfer.account_number }}</p>
+      <p><strong>Amount:</strong> ₦{{ transfer.amount|floatformat:2 }}</p>
+      <p><strong>Status:</strong> 
+        <span class="status {% if transfer.status == 'failed' %}failed{% endif %}">
+          {{ transfer.status|capfirst }}
+        </span>
+      </p>
+      {% if transaction.invoice_id %}
+        <p><strong>Invoice Number:</strong> {{ transaction.invoice_id }}</p>
+      {% endif %}
+
+      <p><strong>Reference:</strong> {{ transfer.reference }}</p>
+      <p><strong>Date:</strong> {{ transfer.created_at|date:"D, d M Y – h:i A" }}</p>
+    </div>
+
+    <div class="back-link">
+      <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>
